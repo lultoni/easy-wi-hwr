@@ -111,8 +111,10 @@
     (title: "Interviewleitfaden",  content: include("anhang/a_interviewleitfaden.typ")),
     (title: "Rohdaten Umfrage",    content: include("anhang/b_rohdaten.typ")),
     (title: "Screenshot Dashboard", content: include("anhang/c_abbildung.typ")),
-    // Bild direkt einbinden:
-    // (title: "Diagramm", content: image("anhang/diagramm.png")),
+    // Bild als Anhang einbinden — immer in einer Anhang-Datei via #figure():
+    // (title: "Diagramm", content: include("anhang/d_diagramm.typ")),
+    // In anhang/d_diagramm.typ dann:
+    //   #figure(image("../images/diagramm.png"), caption: [Beschriftung])
   ),
 
   // Bibliographie:
@@ -123,6 +125,7 @@
   // Weitere Einstellungen:
   heading-depth: 4,       // TOC-Tiefe: 1–4 (default: 4)
   declaration-lang: auto, // auto = folgt lang | "de" = immer Deutsch (rechtssicher)
+  city: "Berlin",         // Ort für Unterschriftsfeld (default: "Berlin")
 )
 
 // HINWEIS: Alles ab hier ist Haupttextinhalt.

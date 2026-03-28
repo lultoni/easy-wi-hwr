@@ -40,7 +40,7 @@ set page(margin: (top: 30mm, right: 35mm, bottom: 20mm, left: 21mm))
 | FMT-31 | Vorspann (Verzeichnisse) Nummerierung | Römisch (I, II, III…) fortlaufend | Ja |
 | FMT-32 | Haupttext ab erster Textseite | Arabisch (1, 2, 3…) fortlaufend | Ja |
 | FMT-33 | Arabische Nummerierung gilt bis | inkl. Anhang und Ehrenwörtlicher Erklärung | Ja |
-| FMT-34 | Position der Seitennummer | Oben | Ja |
+| FMT-34 | Position der Seitennummer | Oben (Richtlinie: "oben"; implementiert: top+right als übliche Konvention) | Ja |
 | FMT-35 | Sperrvermerk-Seite | Keine Nummer, nicht in Zählung | Ja |
 
 ## Tabellen & Abbildungen
@@ -48,8 +48,9 @@ set page(margin: (top: 30mm, right: 35mm, bottom: 20mm, left: 21mm))
 | ID | Anforderung | Wert | Pflicht? |
 |---|---|---|---|
 | FMT-40 | Positionierung | Zentriert | Ja |
-| FMT-41 | Tabellen Beschriftung | Oben, "Tabelle N: Titel" | Ja |
-| FMT-42 | Abbildungen Beschriftung | Unten, "Abb. N: Titel" + Quelle | Ja |
+| FMT-41 | Tabellen Headerzeile | Tabellen müssen eine `table.header()`-Zeile haben ("Überschriften" laut Richtlinie §3.6) | Ja |
+| FMT-41b | Tabellen Beschriftung (Caption) | Unten — Richtlinie §3.6 nennt nur "Unterschrift" für Abbildungen; Tabellen-Captions folgen derselben Konvention | Konvention |
+| FMT-42 | Abbildungen Beschriftung | Unten, "Abb. N: Titel" + Quelle (Richtlinie §3.6: "Unterschrift" = darunter; Wort "unten" nicht explizit) | Ja (aus Wortlaut abgeleitet) |
 | FMT-43 | Nummerierung | Fortlaufend durch die gesamte Arbeit | Ja |
 | FMT-44 | Quellenangabe | Unmittelbar unter Abb./Tab., mit "Quelle:" | Ja |
 | FMT-45 | Liegende/gefaltete Seiten | Vermeiden; wenn nötig: im Uhrzeigersinn drehbar | Empfehlung |

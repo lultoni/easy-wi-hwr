@@ -54,6 +54,7 @@ confidential-text-all =
 ## Declaration of Authorship
 
 declaration-title = Declaration of Authorship
+declaration-date-label =
 declaration-place-date = Place, Date
 declaration-signature = Signature
 

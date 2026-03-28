@@ -20,7 +20,8 @@
 
 **Hinweis:** Sperrvermerk, Deckblatt und Inhaltsverzeichnis erscheinen NICHT im Inhaltsverzeichnis selbst.
 **Hinweis:** Verzeichnisse (TOC, Abkürzungen, etc.) und Anhang erhalten keine Gliederungsnummern.
-**Hinweis:** KI-Verzeichnis erscheint automatisch als letztes Item im Anhang (nach user-definierten `appendix`-Einträgen). Nummerierung: letzter Buchstabe der Anhang-Sequenz (z.B. Anhang C wenn A+B user-defined).
+**Hinweis:** KI-Verzeichnis erscheint automatisch als letztes Item im Anhang. Nummerierung: letzte Zahl der Anhang-Sequenz (z.B. Anhang 3 wenn 1+2 user-defined).
+**Hinweis:** Anhang-Bezeichnung: Die HWR-Richtlinien schreiben keine A/B/C vs. 1/2/3 Notation vor. Template-Entscheidung: arabische Zahlen (1, 2, 3...) — keine 26-Eintrags-Beschränkung, konsistent mit Seiten-/Kapitel-Nummerierungskonvention.
 **Hinweis:** Word-Export ist Out-of-Scope für das Template. Richtlinien §3.1 verlangen Word+PDF-Abgabe — User muss Word-Version selbst erstellen (z.B. via Pandoc oder Copy-Paste).
 
 ## Gliederungssystem (§3.3.1)

@@ -56,6 +56,7 @@ confidential-text-all =
 ## Ehrenwörtliche Erklärung
 
 declaration-title = Ehrenwörtliche Erklärung
+declaration-date-label = den
 declaration-place-date = Ort, Datum
 declaration-signature = Unterschrift
 

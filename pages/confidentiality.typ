@@ -15,7 +15,7 @@
 /// - authors: array of (name, matrikel)
 /// - date: str — already formatted
 /// - lang: "de" | "en"
-#let render-confidentiality(confidential, company, title, authors, date, lang) = {
+#let render-confidentiality(confidential, company, title, authors, date, lang, city: "Berlin") = {
   // Keine Seitennummer, nicht in Zählung (CNT-21, STR-01, FMT-35)
   set page(numbering: none, footer: none, header: none)
 
@@ -64,21 +64,24 @@
   v(3cm)
 
   // Unterschriften-Zeilen — eine pro Autor (wie declaration.typ)
+  // breakable: false prevents a single signature block from splitting across pages
   for a in authors {
-    grid(
-      columns: (1fr, 1fr),
-      column-gutter: 2em,
-      [
-        #linguify("declaration-place-date") \
-        #v(1.5cm)
-        #line(length: 100%)
-      ],
-      [
-        #linguify("declaration-signature") — #a.name \
-        #v(1.5cm)
-        #line(length: 100%)
-      ],
-    )
+    block(breakable: false)[
+      #grid(
+        columns: (1fr, 1fr),
+        column-gutter: 2em,
+        [
+          #city, #linguify("declaration-date-label") \
+          #v(1.5cm)
+          #line(length: 100%)
+        ],
+        [
+          #linguify("declaration-signature") — #a.name \
+          #v(1.5cm)
+          #line(length: 100%)
+        ],
+      )
+    ]
     v(1em)
   }
 

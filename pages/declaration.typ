@@ -11,7 +11,8 @@
 /// - authors: array of (name, matrikel)
 /// - decl-lang: "de" | "en" — language for the declaration text
 /// - lang: "de" | "en" — document language (for labels if different)
-#let render-declaration(authors, decl-lang, lang) = {
+/// - city: str — city for the place/date field (default "Berlin")
+#let render-declaration(authors, decl-lang, lang, city: "Berlin") = {
   // Force declaration language for this page only
   set text(lang: decl-lang)
 
@@ -30,21 +31,24 @@
   v(3cm)
 
   // Unterschriften-Zeilen — eine pro Autor
+  // breakable: false prevents a single signature block from splitting across pages
   for a in authors {
-    grid(
-      columns: (1fr, 1fr),
-      column-gutter: 2em,
-      [
-        #linguify("declaration-place-date") \
-        #v(1.5cm)
-        #line(length: 100%)
-      ],
-      [
-        #linguify("declaration-signature") — #a.name \
-        #v(1.5cm)
-        #line(length: 100%)
-      ],
-    )
+    block(breakable: false)[
+      #grid(
+        columns: (1fr, 1fr),
+        column-gutter: 2em,
+        [
+          #city, #linguify("declaration-date-label") \
+          #v(1.5cm)
+          #line(length: 100%)
+        ],
+        [
+          #linguify("declaration-signature") — #a.name \
+          #v(1.5cm)
+          #line(length: 100%)
+        ],
+      )
+    ]
     v(1em)
   }
 }

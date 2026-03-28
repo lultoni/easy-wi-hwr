@@ -113,6 +113,7 @@
 
   heading-depth: 4,
   declaration-lang: auto,
+  city: "Berlin",
 
   // show-rule body (passed automatically by #show: hwr.with(...))
   body,
@@ -161,35 +162,37 @@
   // FMT-03/04: Captions 10pt
   show figure.caption: set text(size: 10pt)
 
-  // FMT-41: Table captions appear ABOVE the table (supplement "Tabelle")
-  // FMT-42: Figure captions appear BELOW the figure (supplement "Abb." / "Fig.")
+  // FMT-41 reinterpretation: The HWR guideline says tables must have "Überschriften" (header rows),
+  // meaning table.header() — not figure caption position. Captions go below like figures (FMT-42).
+  // FMT-42: Figure captions appear below ("Unterschrift" = below, per guideline wording).
   // FMT-40: Figures and tables centered
   set figure(placement: none)
-  show figure.where(kind: table): set figure.caption(position: top)
   show figure.where(kind: image): set figure.caption(position: bottom)
+  show figure.where(kind: table): set figure.caption(position: bottom)
 
   // FMT-46: Tables fully stroked
   set table(stroke: 0.5pt)
 
   // FMT-11: No first-line indent after headings; typographic spacing above/below.
-  // Level 1 gets more space above (signals section break) and below.
-  // Subsequent levels get progressively less.
+  // More space before a heading (signals start of new section) than after.
+  // H1: most prominent; H2: moderate; H3+: subtle.
+  // below is generous (>= 1 line) so text does not feel cramped under a heading.
   show heading.where(level: 1): it => {
-    v(1.5em, weak: true)
+    v(1.8em, weak: true)
+    it
+    v(0.8em, weak: true)
+    set par(first-line-indent: 0pt)
+  }
+  show heading.where(level: 2): it => {
+    v(1.2em, weak: true)
     it
     v(0.6em, weak: true)
     set par(first-line-indent: 0pt)
   }
-  show heading.where(level: 2): it => {
+  show heading: it => {
     v(1.0em, weak: true)
     it
-    v(0.4em, weak: true)
-    set par(first-line-indent: 0pt)
-  }
-  show heading: it => {
-    v(0.8em, weak: true)
-    it
-    v(0.3em, weak: true)
+    v(0.5em, weak: true)
     set par(first-line-indent: 0pt)
   }
 
@@ -220,7 +223,7 @@
 
   // 1. Sperrvermerk (vor Deckblatt, keine Seitennummer, nicht in Zählung — CNT-20, STR-01)
   if confidential != none {
-    render-confidentiality(confidential, company, title, authors, resolved-date, lang)
+    render-confidentiality(confidential, company, title, authors, resolved-date, lang, city: city)
   }
 
   // 2. Deckblatt: Seitenzähler startet bei I (röm.), aber Nummer nicht sichtbar (STR-02)
@@ -261,6 +264,7 @@
 
   // 5. Glossar (nach Haupttext, vor Literaturverzeichnis — STR-11)
   if glossary.len() > 0 {
+    pagebreak(weak: true)
     heading(level: 1, numbering: none, outlined: true)[#linguify("glossary-title")]
     print-glossary(glossary)
     pagebreak()
@@ -268,16 +272,18 @@
 
   // 6. Literaturverzeichnis (STR-08)
   if bibliography != none {
+    pagebreak(weak: true)
     bibliography
   }
 
   // 7. Anhang: user-Einträge + KI-Verzeichnis automatisch als letztes Item (STR-09, STR-12)
   if appendix.len() > 0 or ai-tools.len() > 0 {
+    pagebreak(weak: true)
     render-appendix(appendix, ai-tools, lang)
   }
 
   // 8. Ehrenwörtliche Erklärung (immer zuletzt — STR-10)
-  render-declaration(authors, decl-lang, lang)
+  render-declaration(authors, decl-lang, lang, city: city)
 }
 
 // ---------------------------------------------------------------------------
