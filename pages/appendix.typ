@@ -35,7 +35,7 @@
   v(0.5em)
 
   table(
-    columns: (auto, 1fr, auto, auto),
+    columns: (1fr, 2fr, 1fr, 1fr),
     align: left,
     stroke: 0.5pt,
     table.header(
@@ -56,20 +56,25 @@
 }
 
 /// Render the appendix table of contents (Anhangsverzeichnis).
-/// Lists all appendix entries with clickable links.
+/// Lists all appendix entries with clickable links and page numbers.
 /// entries: array of (letter, title-string)
 #let _render-appendix-toc(entries) = {
-  heading(level: 1, numbering: none, outlined: false)[#linguify("appendix-toc-title")]
+  heading(level: 1, numbering: none, outlined: true)[#linguify("appendix-toc-title")]
   v(1em)
 
   for entry in entries {
     let letter = entry.at(0)
     let title  = entry.at(1)
-    grid(
-      columns: (40pt, 1fr),
-      [#linguify("appendix-label") #letter:],
-      link(label("anhang-" + lower(letter)))[#title],
-    )
+    context {
+      let pg = query(label("anhang-" + lower(letter))).first().location().page()
+      grid(
+        columns: (50pt, 1fr, auto),
+        align: (left, left, right),
+        [Anhang #letter:],
+        link(label("anhang-" + lower(letter)))[#title #box(width: 1fr, repeat[.])],
+        [#pg],
+      )
+    }
     v(0.3em)
   }
 

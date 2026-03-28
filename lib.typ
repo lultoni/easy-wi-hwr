@@ -171,8 +171,23 @@
   // FMT-46: Tables fully stroked
   set table(stroke: 0.5pt)
 
-  // FMT-11: No first-line indent after headings
+  // FMT-11: No first-line indent after headings; typographic spacing above/below.
+  // Level 1 gets more space above (signals section break) and below.
+  // Subsequent levels get progressively less.
+  show heading.where(level: 1): it => {
+    v(1.5em, weak: true)
+    it
+    v(0.6em, weak: true)
+    set par(first-line-indent: 0pt)
+  }
+  show heading.where(level: 2): it => {
+    v(1.0em, weak: true)
+    it
+    v(0.4em, weak: true)
+    set par(first-line-indent: 0pt)
+  }
   show heading: it => {
+    v(0.8em, weak: true)
     it
     v(0.3em, weak: true)
     set par(first-line-indent: 0pt)
@@ -235,7 +250,10 @@
   // chapters: array of included content (api-design §11)
   // User passes: chapters: (include("kapitel/01.typ"), include("kapitel/02.typ"), ...)
   // The include() calls are evaluated in main.typ (relative to main.typ), so paths work correctly.
+  // pagebreak(weak: true): new page before each chapter; weak prevents double-break if chapter
+  // itself starts with #pagebreak().
   for ch in chapters {
+    pagebreak(weak: true)
     ch
   }
 

@@ -460,7 +460,7 @@ ${CHAPTER_INCLUDES}  ),
   // ),
 
   // ── Literaturverzeichnis ───────────────────────────────
-  bibliography: bibliography("refs.bib"),
+  bibliography: bibliography("refs.bib", title: "Literaturverzeichnis"),
   citation-style: "apa",
   // Englische Arbeit? Dann: citation-style: "harvard-anglia-ruskin-university"
 

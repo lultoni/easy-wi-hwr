@@ -63,21 +63,24 @@
 
   v(3cm)
 
-  // Unterschriften-Grid: Ort/Datum links, Unterschrift rechts
-  grid(
-    columns: (1fr, 1fr),
-    column-gutter: 2em,
-    [
-      #linguify("declaration-place-date") \
-      #v(1.5cm)
-      #line(length: 100%)
-    ],
-    [
-      #linguify("declaration-signature") \
-      #v(1.5cm)
-      #line(length: 100%)
-    ],
-  )
+  // Unterschriften-Zeilen — eine pro Autor (wie declaration.typ)
+  for a in authors {
+    grid(
+      columns: (1fr, 1fr),
+      column-gutter: 2em,
+      [
+        #linguify("declaration-place-date") \
+        #v(1.5cm)
+        #line(length: 100%)
+      ],
+      [
+        #linguify("declaration-signature") — #a.name \
+        #v(1.5cm)
+        #line(length: 100%)
+      ],
+    )
+    v(1em)
+  }
 
   pagebreak()
 }

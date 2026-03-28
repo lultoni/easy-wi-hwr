@@ -27,10 +27,10 @@ abstract-title = Abstract
 ## KI-Verzeichnis
 
 ai-tools-title = KI-Verzeichnis
-ai-col-tool = KI-basiertes Hilfsmittel
+ai-col-tool = KI-Hilfsmittel
 ai-col-usage = Einsatzform
 ai-col-chapters = Betroffene Teile der Arbeit
-ai-col-remarks = Bemerkungen
+ai-col-remarks = Bemerkung
 
 ## Sperrvermerk
 

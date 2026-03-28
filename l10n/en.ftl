@@ -27,9 +27,9 @@ abstract-title = Abstract
 ## AI Tools Register
 
 ai-tools-title = AI Tools Register
-ai-col-tool = AI-based Tool
+ai-col-tool = AI Tool
 ai-col-usage = Usage
-ai-col-chapters = Affected Parts of the Work
+ai-col-chapters = Affected Parts
 ai-col-remarks = Remarks
 
 ## Confidentiality Notice

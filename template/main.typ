@@ -65,10 +65,20 @@
   ),
 
   // Glossar (für erklärungsbedürftige Fachbegriffe ohne eigene Abkürzung):
+  //
+  // Schritt 1: Einträge hier definieren:
   // glossary: (
   //   (key: "stakeholder", short: "Stakeholder", long: "Stakeholder",
-  //    description: "Interessengruppen, die von einem Projekt betroffen sind."),
+  //    description: "Interessengruppen, die direkt oder indirekt von einem Projekt betroffen sind."),
+  //   (key: "erp", short: "ERP", long: "Enterprise Resource Planning",
+  //    description: "Integrierte Softwaresysteme zur Steuerung von Unternehmensprozessen."),
   // ),
+  //
+  // Schritt 2: Im Text verwenden (in kapitel/*.typ):
+  //   #gls("stakeholder")    → gibt "Stakeholder" aus + Glossar-Link
+  //   #glspl("stakeholder")  → Pluralform
+  //
+  // Das Glossar erscheint automatisch nach dem Haupttext (vor dem Literaturverzeichnis).
 
   // KI-Verzeichnis (Pflicht wenn KI-Tools verwendet, §3.8):
   // ai-tools: (),                                  // leer = kein KI-Verzeichnis (default)
@@ -106,7 +116,7 @@
   ),
 
   // Bibliographie:
-  bibliography: bibliography("refs.bib"),
+  bibliography: bibliography("refs.bib", title: "Literaturverzeichnis"),
   citation-style: "apa",
   // Zitierstile: "apa" (DE default) | "harvard-anglia-ruskin-university" (EN) | "pfad/zur/datei.csl"
 
