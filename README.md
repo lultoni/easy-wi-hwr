@@ -79,18 +79,15 @@ Das Template verwendet **Times New Roman** (HWR-Vorschrift).
 
 ## Schritt 3: Projekt einrichten — zwei Wege
 
-### Weg A — Typst Universe (ein Befehl, für alle die Typst schon kennen)
+### Weg A — Typst Universe (ein Befehl)
 
 ```bash
-typst init @preview/wi-hwr-berlin:0.1.0
-```
-
-Das erstellt sofort einen fertigen Projektordner. Danach:
-
-```bash
-cd wi-hwr-berlin
+typst init @preview/wi-hwr-berlin:0.1.0 meine-arbeit
+cd meine-arbeit
 typst watch main.typ   # Live-Vorschau, Beenden: Ctrl+C
 ```
+
+Das erstellt sofort einen fertigen Projektordner mit einer vorausgefüllten `main.typ`.
 
 ### Weg B — interaktives Setup-Script (empfohlen für Einsteiger)
 
@@ -129,8 +126,8 @@ Am Ende hast du einen fertigen Projektordner mit vorausgefüllter `main.typ`.
 Öffne den Projektordner in einem Texteditor. Empfohlen: **VS Code** (kostenlos, [code.visualstudio.com](https://code.visualstudio.com)) mit der **Tinymist**-Erweiterung für Syntax-Highlighting.
 
 ```
-DEIN-PROJEKT/
-├── main.typ            ← deine Metadaten (Titel, Name, …) — schon ausgefüllt
+meine-arbeit/
+├── main.typ            ← deine Metadaten (Titel, Name, …) — hier arbeitest du
 ├── refs.bib            ← deine Quellen
 ├── kapitel/
 │   ├── 01_einleitung.typ   ← hier schreibst du
@@ -190,7 +187,7 @@ Die fertige PDF liegt direkt neben `main.typ`.
 
 ### VS Code + Tinymist
 
-Tinymist liefert Syntax-Highlighting und Autocomplete für `.typ`-Dateien — praktisch beim Schreiben. Für die PDF-Erstellung ist das Terminal der direktere Weg.
+Tinymist liefert Syntax-Highlighting und Autocomplete für `.typ`-Dateien. Du kannst auch direkt aus VS Code heraus kompilieren — Tinymist zeigt eine Live-Vorschau im Editor-Fenster.
 
 ---
 
@@ -230,6 +227,7 @@ ai-tools: (
     tool:     "ChatGPT 4o",
     usage:    "Textvorschläge, im Text gekennzeichnet",
     chapters: "Kapitel 1, S. 3",
+    bemerkungen: "Prompts: siehe Anhang 1",  // optional
   ),
   (
     tool:     "DeepL Translator",
@@ -254,7 +252,33 @@ authors: (
 ),
 ```
 
-Die Ehrenwörtliche Erklärung wechselt automatisch auf „Wir erklären…".
+Die Ehrenwörtliche Erklärung wechselt automatisch auf „Wir erklären…" und beide Autoren erhalten ein Unterschriftsfeld.
+
+**Nur eine stellvertretende Unterschrift** (z.B. bei digitaler Abgabe im Namen der Gruppe — bitte mit dem Prüfer abklären):
+
+```typst
+group-signature: false,  // nur erster Autor unterschreibt
+```
+
+Das Template zeigt dann einen gelben Hinweis im PDF, der daran erinnert, dies mit dem Prüfer abzusprechen.
+
+---
+
+## Digitale Unterschrift einbinden (optional)
+
+Statt einer leeren Linie zum handschriftlichen Unterschreiben kannst du ein Bild deiner Unterschrift einbinden:
+
+1. Unterschrift auf weißem Papier, einscannen oder abfotografieren
+2. Als PNG oder SVG unter `images/` im Projektordner speichern
+3. In `main.typ` beim Autoren-Eintrag ergänzen:
+
+```typst
+authors: (
+  (name: "Max Mustermann", matrikel: "12345678", signature: "images/signatur_max.png"),
+),
+```
+
+Das Bild erscheint dann automatisch im Unterschriftsfeld der Ehrenwörtlichen Erklärung.
 
 ---
 
@@ -287,7 +311,26 @@ lang: "en",
 citation-style: "harvard-anglia-ruskin-university",
 ```
 
-Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzeichnis wechseln automatisch auf Englisch.
+Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzeichnis wechseln automatisch auf Englisch. Der Harvard-Stil entspricht den HWR-Anforderungen für englischsprachige Arbeiten (§6).
+
+---
+
+## Gut zu wissen
+
+**Zitierstil-Wahl:** Standard ist APA (für deutschsprachige Arbeiten). Wenn dein Betreuer einen anderen Stil vorgibt, kannst du eine eigene `.csl`-Datei aus dem [Zotero Style Repository](https://www.zotero.org/styles) herunterladen und direkt referenzieren:
+```typst
+citation-style: "./mein-stil.csl",
+```
+
+**Abkürzungsverzeichnis erscheint automatisch**, aber nur wenn:
+- Abkürzungen in `abbreviations:` eingetragen sind, UND
+- `#abk("XY")` mindestens einmal im Text verwendet wird
+
+Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
+
+**Abbildungs- und Tabellenverzeichnis** erscheinen erst ab 5 Einträgen (HWR-Anforderung). Das Template prüft das automatisch.
+
+**Abgabe als Word + PDF:** Die HWR verlangt beide Formate. Das Template erzeugt nur PDF. Die Word-Version musst du separat erstellen (z.B. via Pandoc oder Copy-Paste).
 
 ---
 
@@ -297,7 +340,7 @@ Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzei
 
 | Parameter | Beschreibung |
 |---|---|
-| `doc-type` | Art der Arbeit — `"ptb-1"`, `"ptb-2"`, `"ptb-3"`, `"hausarbeit"`, `"studienarbeit"`, `"bachelorarbeit"` |
+| `doc-type` | Art der Arbeit: `"ptb-1"`, `"ptb-2"`, `"ptb-3"`, `"hausarbeit"`, `"studienarbeit"`, `"bachelorarbeit"` |
 | `title` | Titel der Arbeit |
 | `authors` | Array: `((name: "...", matrikel: "..."),)` |
 
@@ -318,20 +361,29 @@ Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzei
 | `field-of-study` | `"Wirtschaftsinformatik"` | Fachrichtung |
 | `cohort` | — | Studienjahrgang, z.B. `"2024"` |
 | `semester` | — | Studienhalbjahr, z.B. `"3"` |
-| `date` | `auto` | Abgabedatum; `auto` = heutiges Datum |
-| `abstract` | — | Zusammenfassung vor dem Inhaltsverzeichnis |
-| `confidential` | — | Sperrvermerk — siehe oben |
+| `date` | `auto` | Abgabedatum; `auto` = heutiges Datum, oder manuell: `"15. März 2026"` |
+| `abstract` | `none` | Zusammenfassung vor dem Inhaltsverzeichnis |
+| `confidential` | `none` | Sperrvermerk — `none`, `true` oder `(chapters: (...), filename: ...)` |
 | `abbreviations` | `(:)` | Abkürzungen als Dictionary |
-| `glossary` | `()` | Glossareinträge (via glossarium) |
-| `ai-tools` | `()` | KI-Verzeichnis-Einträge |
-| `chapters` | `()` | Kapitel-Dateien via `include()` |
-| `appendix` | `()` | Anhang-Einträge: `(title: "...", content: ...)` |
-| `show-appendix-toc` | `false` | `true` = optionales Anhangsverzeichnis einfügen (HWR §3.10 optional) |
+| `glossary` | `()` | Glossareinträge für erklärungsbedürftige Fachbegriffe (ohne eigene Abkürzung) |
+| `ai-tools` | `()` | KI-Verzeichnis-Einträge — `(tool, usage, chapters, bemerkungen?)` |
+| `chapters` | `()` | Kapitel-Dateien via `include()` in gewünschter Reihenfolge |
+| `appendix` | `()` | Anhang-Einträge: `(title: "...", content: include(...))` |
+| `show-appendix-toc` | `false` | `true` = optionales Anhangsverzeichnis vor den Anhang-Einträgen (HWR §3.10) |
 | `bibliography` | — | `bibliography("refs.bib", title: "Literaturverzeichnis")` |
-| `citation-style` | `"apa"` | Zitierstil |
-| `heading-depth` | `4` | TOC-Tiefe (max. 4 laut HWR) |
-| `declaration-lang` | `auto` | Sprache der Erklärung (`"de"` empfohlen) |
+| `citation-style` | `"apa"` | Zitierstil: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN), oder Pfad zu `.csl`-Datei |
+| `heading-depth` | `4` | TOC-Tiefe 1–4 (max. 4 laut HWR) |
+| `declaration-lang` | `auto` | Sprache der Ehrenwörtlichen Erklärung — `auto` folgt `lang`, `"de"` immer Deutsch |
 | `city` | `"Berlin"` | Ort im Unterschriftsfeld der Ehrenwörtlichen Erklärung |
+| `group-signature` | `auto` | `auto`/`true` = alle Autoren unterschreiben; `false` = nur erster Autor |
+
+### Felder im `authors`-Array
+
+| Feld | Pflicht | Beschreibung |
+|---|---|---|
+| `name` | Ja | Vollständiger Name |
+| `matrikel` | Ja | Matrikelnummer |
+| `signature` | Nein | Pfad zur Unterschriften-Bilddatei (PNG/SVG), z.B. `"images/signatur.png"` |
 
 ---
 
@@ -341,11 +393,12 @@ Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzei
 |---|---|
 | `doc-type "..." ist ungültig` | Wert muss exakt `"ptb-1"`, `"ptb-2"`, `"ptb-3"`, `"hausarbeit"`, `"studienarbeit"` oder `"bachelorarbeit"` sein |
 | `supervisor ist Pflicht für...` | Für alle Typen außer `"bachelorarbeit"` müssen `supervisor:` und `company:` gesetzt sein |
-| Times New Roman fehlt | Auf Linux: `sudo apt install ttf-mscorefonts-installer` |
+| Times New Roman fehlt (Linux) | `sudo apt install ttf-mscorefonts-installer` |
 | Abkürzung erscheint nicht im Verzeichnis | `#abk("XY")` muss im Text vorkommen — nur verwendete Abkürzungen erscheinen |
-| KI-Verzeichnis fehlt | `ai-tools:` braucht mindestens einen Eintrag |
+| KI-Verzeichnis fehlt | `ai-tools:` braucht mindestens einen Eintrag; bei `ai-tools: ()` erscheint kein Verzeichnis |
 | Abbildungsverzeichnis fehlt | Erscheint erst ab 5 Abbildungen (HWR-Anforderung) |
-| PDF wird nicht aktualisiert | `typst compile PROJEKTNAME/main.typ` aus dem Template-Hauptordner ausführen, nicht aus dem Projektunterordner |
+| Kapitel erscheint nicht im PDF | Prüfe ob die Datei in der `chapters:`-Liste in `main.typ` eingetragen ist |
+| Import-Fehler bei `include()` | Pfade in `chapters:` sind relativ zu `main.typ` — `include("kapitel/01_einleitung.typ")` |
 
 ---
 
