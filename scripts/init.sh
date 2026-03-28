@@ -65,36 +65,39 @@ ask() {
   local default="$2"
   local answer
   if [ -n "$default" ]; then
-    read -rp "$(echo -e "${CYAN}?${RESET} $prompt [${default}]: ")" answer
+    read -rp "$(echo -e "${CYAN}?${RESET} $prompt [${default}]: ")" answer </dev/tty
     echo "${answer:-$default}"
   else
-    read -rp "$(echo -e "${CYAN}?${RESET} $prompt: ")" answer
+    read -rp "$(echo -e "${CYAN}?${RESET} $prompt: ")" answer </dev/tty
     echo "$answer"
   fi
 }
 
+# ask_choice: schreibt Menü direkt auf /dev/tty, gibt Ergebnis via CHOICE_RESULT zurück.
+# Aufruf: ask_choice "Prompt" default "Option1" "Option2" ...
+# Ergebnis: $CHOICE_RESULT enthält den gewählten Options-String.
+CHOICE_RESULT=""
 ask_choice() {
   local prompt="$1"
   local default="$2"
   shift 2
   local options=("$@")
-  echo -e "${CYAN}?${RESET} $prompt"
+  echo -e "${CYAN}?${RESET} $prompt" >/dev/tty
   for i in "${!options[@]}"; do
     local num=$((i + 1))
     if [ "$num" = "$default" ]; then
-      echo -e "  ${BOLD}[$num]${RESET} ${options[$i]}  ${YELLOW}← Standard${RESET}"
+      echo -e "  ${BOLD}[$num]${RESET} ${options[$i]}  ${YELLOW}← Standard${RESET}" >/dev/tty
     else
-      echo "  [$num] ${options[$i]}"
+      echo "  [$num] ${options[$i]}" >/dev/tty
     fi
   done
   local answer
-  read -rp "$(echo -e "${CYAN}  Deine Wahl${RESET} [${default}]: ")" answer
+  read -rp "$(echo -e "${CYAN}  Deine Wahl${RESET} [${default}]: ")" answer </dev/tty
   answer="${answer:-$default}"
-  # Sicherstellen dass die Auswahl gültig ist
   if ! [[ "$answer" =~ ^[0-9]+$ ]] || [ "$answer" -lt 1 ] || [ "$answer" -gt "${#options[@]}" ]; then
     answer="$default"
   fi
-  echo "${options[$((answer - 1))]}"
+  CHOICE_RESULT="${options[$((answer - 1))]}"
 }
 
 ok()   { echo -e "  ${GREEN}✓${RESET} $1"; }
@@ -130,14 +133,15 @@ collect_input() {
   echo ""
 
   # Art der Arbeit
-  DOC_TYPE_LABEL=$(ask_choice \
+  ask_choice \
     "Was schreibst du?" "1" \
     "Praxistransferbericht I  (ptb-1)" \
     "Praxistransferbericht II (ptb-2)" \
     "Praxistransferbericht III (ptb-3)" \
     "Hausarbeit" \
     "Studienarbeit" \
-    "Bachelorarbeit")
+    "Bachelorarbeit"
+  DOC_TYPE_LABEL="$CHOICE_RESULT"
 
   case "$DOC_TYPE_LABEL" in
     *"ptb-1"*)        DOC_TYPE="ptb-1" ;;
