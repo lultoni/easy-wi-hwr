@@ -17,7 +17,7 @@
 | Neue Dokumenttypen | Falls HWR neue Typen einführt (z.B. Masterarbeit). API-Breaking wenn `doc-type`-Werte ergänzt werden. | Mittel |
 | Pandoc-Workflow-Hints | README-Sektion die erklärt wie man via Pandoc ein Word-Dokument aus dem Typst-Output erstellt (CNT-24 unterstützen ohne es ins Template zu bauen). | Klein |
 | CI/CD-Integration | GitHub Actions Workflow für automatische PDF-Generierung und Release-Tagging. | Mittel |
-| Unterschriften-Feld auf Ehrenwörtlicher Erklärung | Optionales Unterschriften-Bild-Feld (analog ptb-template). Wurde bewusst weggelassen wegen Pfadproblemen. | Klein |
+| ~~Unterschriften-Feld auf Ehrenwörtlicher Erklärung~~ | ✅ **IMPLEMENTED**: `group-signature` parameter (auto/true = all authors, false = only first author) with bilingual warning block for group work. Renders signature fields with improved layout (line first, label below). | — |
 
 ## Offen / Diskutierbar
 
@@ -34,4 +34,4 @@
 |---|---|
 | Word-Export | Out-of-scope. User-Aufgabe. Richtlinien §3.1 verlangen Word+PDF — Typst erzeugt kein Word. |
 | Ungesperrte Version PDF automatisch | Out-of-scope. Template kann keine Seiten selektiv rausschneiden. |
-| Unterschriften-Bild automatisch einbinden | Out-of-scope. Pfad nicht portierbar. User fügt Unterschrift manuell ein. |
+| ~~Unterschriften-Bild automatisch einbinden~~ | ✅ **IMPLEMENTED**: Optional `signature:` field per author entry. If provided, the image is rendered above the signature line instead of blank space. Example SVG at `template/images/signature_example.svg`. | — |

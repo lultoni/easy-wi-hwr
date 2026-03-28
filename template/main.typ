@@ -18,6 +18,15 @@
     (name: "Max Mustermann", matrikel: "12345678"),
     // Weitere Autoren bei Gruppenarbeit:
     // (name: "Lisa Müller", matrikel: "87654321"),
+    //
+    // Digitale Unterschrift einbinden (optional):
+    // Scanne deine Unterschrift auf weißem Papier, speichere als PNG/SVG unter images/
+    // und füge das Feld signature: hinzu — dann erscheint das Bild statt der leeren Linie:
+    // (name: "Max Mustermann", matrikel: "12345678", signature: "images/signature_max.svg"),
+    // (name: "Lisa Müller",    matrikel: "87654321", signature: "images/signature_lisa.png"),
+    //
+    // Beispiel-Unterschrift (zum Ausprobieren, dann ersetzen):
+    // (name: "Max Mustermann", matrikel: "12345678", signature: "images/signature_example.svg"),
   ),
 
   // === BEDINGT PFLICHT ===
@@ -128,6 +137,10 @@
   city: "Berlin",          // Ort für Unterschriftsfeld (default: "Berlin")
   show-appendix-toc: false, // true = optionales Anhangsverzeichnis vor Anhang-Einträgen einfügen
                             // (HWR §3.10: "ist es möglich" — nicht Pflicht)
+  // group-signature: auto,  // auto/true = alle Autoren unterschreiben (default)
+                            // false = nur erster Autor unterschreibt (bei Gruppenarbeit)
+                            // HINWEIS bei false: Bitte mit dem Prüfer abklären, ob eine
+                            // stellvertretende Unterschrift akzeptiert wird.
 )
 
 // HINWEIS: Alles ab hier ist Haupttextinhalt.

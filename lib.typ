@@ -115,6 +115,7 @@
   heading-depth: 4,
   declaration-lang: auto,
   city: "Berlin",
+  group-signature: auto,
 
   // show-rule body (passed automatically by #show: hwr.with(...))
   body,
@@ -128,6 +129,10 @@
 
   // --- Resolve declaration language ---
   let decl-lang = if declaration-lang == auto { lang } else { declaration-lang }
+
+  // --- Resolve group-signature ---
+  // auto = all authors sign (true); explicit bool overrides
+  let resolved-group-sig = if group-signature == auto { true } else { group-signature }
 
   // --- linguify: configure l10n database ---
   // load-ftl-data returns a Typst script string; eval() executes it to produce the dict.
@@ -224,7 +229,7 @@
 
   // 1. Sperrvermerk (vor Deckblatt, keine Seitennummer, nicht in Zählung — CNT-20, STR-01)
   if confidential != none {
-    render-confidentiality(confidential, company, title, authors, resolved-date, lang, city: city)
+    render-confidentiality(confidential, company, title, authors, resolved-date, lang, city: city, group-signature: resolved-group-sig)
   }
 
   // 2. Deckblatt: Seitenzähler startet bei I (röm.), aber Nummer nicht sichtbar (STR-02)
@@ -284,7 +289,7 @@
   }
 
   // 8. Ehrenwörtliche Erklärung (immer zuletzt — STR-10)
-  render-declaration(authors, decl-lang, lang, city: city)
+  render-declaration(authors, decl-lang, lang, city: city, group-signature: resolved-group-sig)
 }
 
 // ---------------------------------------------------------------------------

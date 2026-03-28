@@ -59,6 +59,11 @@ declaration-date-label =
 declaration-place-date = Place, Date
 declaration-signature = Signature
 
+group-signature-note =
+    Note: This work has multiple authors. Only one signature field has been included
+    (group-signature: false). Please confirm with your supervising examiner whether
+    a single representative signature on behalf of the group is acceptable.
+
 # Mandatory text — equivalent of HWR §3.11 (January 2025 guidelines)
 # Pluralization: [one] = single author, *[other] = group
 declaration-text =

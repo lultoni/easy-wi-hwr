@@ -61,6 +61,12 @@ declaration-date-label = den
 declaration-place-date = Ort, Datum
 declaration-signature = Unterschrift
 
+group-signature-note =
+    Hinweis: Diese Arbeit hat mehrere Autoren. Es wurde nur ein Unterschriftsfeld
+    eingefügt (group-signature: false). Bitte klären Sie vorab mit Ihrer betreuenden
+    Prüferin / Ihrem betreuenden Prüfer, ob eine stellvertretende Unterschrift für
+    die Gruppe akzeptiert wird.
+
 # Pflichttext §3.11 — wörtlich aus den HWR-Richtlinien (Stand Januar 2025)
 # Pluralisierung: [one] = Einzelperson, *[other] = Gruppe
 # Continuation lines MÜSSEN mit mindestens 4 Leerzeichen beginnen (Fluent-Syntax).

@@ -32,6 +32,18 @@ authors: (
 ),
 ```
 
+Optionales `signature:`-Feld pro Autor — wenn angegeben, wird das Bild im Unterschriftsfeld gerendert statt einer leeren Linie:
+```typst
+authors: (
+  (name: "Max Mustermann", matrikel: "12345678", signature: "images/signature_max.png"),
+  (name: "Lisa Müller",    matrikel: "87654321", signature: "images/signature_lisa.svg"),
+),
+```
+- Pfad relativ zu `main.typ`
+- Unterstützte Formate: PNG, SVG, JPEG (alles was Typst `image()` versteht)
+- Ohne `signature:`: leere Linie zum handschriftlichen Unterschreiben
+- Beispiel-SVG: `template/images/signature_example.svg`
+
 ## 3. Abkürzungen: Hybrid + Auto-Detection via Script
 
 ### Drei Wege, alle kombinierbar:
@@ -445,5 +457,10 @@ Headings tiefer als `heading-depth` werden nicht nummeriert (aber sind erlaubt a
   heading-depth: 4,          // 1–4, default 4
 
   declaration-lang: auto,    // auto | "de" | "en"
+
+  group-signature: auto,     // auto/true = all authors sign (default)
+                             // false = only first author signs (group work)
+                             // When false & authors.len() > 1: shows yellow warning block
+                             // confirming with examiner about representative signature
 )
 ```
