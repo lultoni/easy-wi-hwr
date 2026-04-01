@@ -97,8 +97,6 @@ typst watch main.typ   # Live-Vorschau, Beenden: Ctrl+C
 
 Das erstellt sofort einen fertigen Projektordner mit einer vorausgefüllten `main.typ`.
 
-> Funktioniert nicht? Fehlermeldung `package not found`? → Das Paket wartet noch auf Freigabe im Typst Universe. Nutze in der Zwischenzeit **Weg B**.
-
 ### Weg B — interaktives Setup-Script (optional, für Einsteiger)
 
 Das Script stellt dir alle Fragen und erstellt eine vollständig ausgefüllte `main.typ` mit deinen Daten.
