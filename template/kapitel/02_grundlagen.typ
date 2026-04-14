@@ -1,5 +1,5 @@
 // kapitel/02_grundlagen.typ
-#import "@preview/easy-wi-hwr:0.1.0": abk
+#import "@preview/easy-wi-hwr:0.1.1": abk
 
 = Theoretische Grundlagen
 
