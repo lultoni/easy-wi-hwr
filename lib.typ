@@ -344,5 +344,5 @@
 // Re-exports for use in chapter files
 // ---------------------------------------------------------------------------
 // Users import these from lib.typ in their kapitel/ files:
-//   #import "@preview/easy-wi-hwr:0.1.0": abk, gls, glspl
+//   #import "@preview/easy-wi-hwr:0.1.1": abk, gls, glspl
 
