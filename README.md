@@ -69,7 +69,7 @@ Nach der Installation im Terminal eingeben:
 ```
 typst --version
 ```
-→ Es sollte eine Versionsnummer erscheinen (z.B. `typst 0.13.1`).
+→ Es sollte eine Versionsnummer erscheinen (z.B. `typst 0.14.2`). Ein `(unknown hash)` dahinter kann ignoriert werden.
 
 ---
 
@@ -91,9 +91,11 @@ Das Template verwendet **Times New Roman** (HWR-Vorschrift).
 
 ### Weg A — Typst Universe (ein Befehl)
 
+Führe folgenden Befehl im Terminal aus (in dem Verzeichniss, wo du deinen Projektordner willst):
 ```bash
 typst init @preview/easy-wi-hwr:0.1.1 meine-arbeit
 ```
+→ `meine-arbeit` ist der Titel des Ordners und kann angepasst werden
 
 Das erstellt sofort einen fertigen Projektordner mit einer vorausgefüllten `main.typ`.
 
@@ -124,7 +126,7 @@ Am Ende hast du einen fertigen Projektordner mit vorausgefüllter `main.typ`.
 
 ## Schritt 4: Schreiben
 
-Öffne den Projektordner in einem Texteditor. Empfohlen: **VS Code** (kostenlos, [code.visualstudio.com](https://code.visualstudio.com)) mit der **Tinymist**-Erweiterung für Syntax-Highlighting.
+Öffne den Projektordner in einem Texteditor. Empfohlen: **VS Code** (kostenlos, [code.visualstudio.com](https://code.visualstudio.com)) mit der **Tinymist**-Erweiterung für Syntax-Highlighting, aber es kann auch in jedem anderen Texteditor gemacht werden.
 
 ```
 meine-arbeit/
@@ -169,7 +171,7 @@ abbreviations: (
 ),
 ```
 
-**Alternative: Alles in einer Datei** — Du kannst auch ohne separate Kapitel-Dateien arbeiten. Lass `chapters:` leer und schreibe deinen gesamten Text direkt in `main.typ` nach dem Einstellungsblock:
+**Alternative: Alles in einer Datei** — Du kannst auch ohne separate Kapitel-Dateien arbeiten. Lass `chapters:` leer und schreibe deinen gesamten Text direkt in `main.typ` nach dem Einstellungsblock. Zwischen Kapiteln `#pagebreak()` einfügen, damit jedes auf einer neuen Seite beginnt (bei `chapters:` passiert das automatisch):
 
 ```typst
 #show: hwr.with(
@@ -182,9 +184,10 @@ abbreviations: (
 
 Hier beginnt mein Text direkt in main.typ.
 
-== Hintergrund
+#pagebreak()
+= Grundlagen
 
-Weiterer Text...
+Zweites Kapitel...
 ```
 
 Für kürzere Arbeiten (z.B. Hausarbeiten) ist das oft einfacher. Für längere Arbeiten empfehlen sich separate Dateien in `kapitel/`.
@@ -248,7 +251,7 @@ ai-tools: (
     tool:     "ChatGPT 4o",
     usage:    "Textvorschläge, im Text gekennzeichnet",
     chapters: "Kapitel 1, S. 3",
-    bemerkungen: "Prompts: siehe Anhang 1",  // optional
+    remarks:  "Prompts: siehe Anhang 1",  // auch "bemerkungen:" funktioniert
   ),
   (
     tool:     "DeepL Translator",
@@ -332,13 +335,13 @@ lang: "en",
 citation-style: "harvard-anglia-ruskin-university",
 ```
 
-Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzeichnis wechseln automatisch auf Englisch. Der Harvard-Stil entspricht den HWR-Anforderungen für englischsprachige Arbeiten (§6).
+Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzeichnis wechseln automatisch auf Englisch. Die Harvard-CSL-Datei (Anglia Ruskin University) ist im Template enthalten und wird automatisch geladen — kein manueller Download nötig (HWR §6).
 
 ---
 
 ## Gut zu wissen
 
-**Zitierstil-Wahl:** Standard ist APA (für deutschsprachige Arbeiten). Wenn dein Betreuer einen anderen Stil vorgibt, kannst du eine eigene `.csl`-Datei aus dem [Zotero Style Repository](https://www.zotero.org/styles) herunterladen und per `read()` einbinden:
+**Zitierstil-Wahl:** Standard ist APA (für deutschsprachige Arbeiten). Für englischsprachige Arbeiten: `citation-style: "harvard-anglia-ruskin-university"` — die CSL-Datei ist im Template enthalten. Wenn dein Betreuer einen anderen Stil vorgibt, kannst du eine eigene `.csl`-Datei aus dem [Zotero Style Repository](https://www.zotero.org/styles) herunterladen und per `read()` einbinden:
 ```typst
 citation-style: read("mein-stil.csl"),
 ```
@@ -388,12 +391,12 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | `confidential` | `none` | Sperrvermerk — `none`, `true` oder `(chapters: (...), filename: ...)` |
 | `abbreviations` | `(:)` | Abkürzungen als Dictionary |
 | `glossary` | `()` | Glossareinträge für erklärungsbedürftige Fachbegriffe (ohne eigene Abkürzung) |
-| `ai-tools` | `()` | KI-Verzeichnis-Einträge — `(tool, usage, chapters, bemerkungen?)` |
+| `ai-tools` | `()` | KI-Verzeichnis-Einträge — `(tool, usage, chapters, remarks?)` |
 | `chapters` | `()` | Kapitel-Dateien via `include()` in gewünschter Reihenfolge |
 | `appendix` | `()` | Anhang-Einträge: `(title: "...", content: include(...))` |
 | `show-appendix-toc` | `false` | `true` = optionales Anhangsverzeichnis vor den Anhang-Einträgen (HWR §3.10) |
-| `bibliography` | — | `bibliography("refs.bib", title: "Literaturverzeichnis")` |
-| `citation-style` | `"apa"` | Zitierstil: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN), oder `read("datei.csl")` |
+| `bibliography` | — | `bibliography("refs.bib")` — Titel wird automatisch gesetzt |
+| `citation-style` | `"apa"` | Zitierstil: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN, mitgeliefert), oder `read("datei.csl")` |
 | `heading-depth` | `4` | TOC-Tiefe 1–4 (max. 4 laut HWR) |
 | `declaration-lang` | `auto` | Sprache der Ehrenwörtlichen Erklärung — `auto` folgt `lang`, `"de"` immer Deutsch |
 | `city` | `"Berlin"` | Ort im Unterschriftsfeld der Ehrenwörtlichen Erklärung |
@@ -415,6 +418,8 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 |---|---|
 | `doc-type "..." ist ungültig` | Wert muss exakt `"ptb-1"`, `"ptb-2"`, `"ptb-3"`, `"hausarbeit"`, `"studienarbeit"` oder `"bachelorarbeit"` sein |
 | `supervisor ist Pflicht für...` | Für alle Typen außer `"bachelorarbeit"` müssen `supervisor:` und `company:` gesetzt sein |
+| `authors must be an array of dicts` | `authors:` muss ein Array sein: `authors: ((name: "...", matrikel: "..."),)` — bei einem Autor das Komma nach der Klammer nicht vergessen! |
+| `chapters entries must use include()` | Keine String-Pfade verwenden. Richtig: `chapters: (include("kapitel/01.typ"),)` statt `chapters: ("kapitel/01.typ",)` |
 | Times New Roman fehlt (Linux) | `sudo apt install ttf-mscorefonts-installer` |
 | Abkürzung erscheint nicht im Verzeichnis | `#abk("XY")` muss im Text vorkommen — nur verwendete Abkürzungen erscheinen |
 | KI-Verzeichnis fehlt | `ai-tools:` braucht mindestens einen Eintrag; bei `ai-tools: ()` erscheint kein Verzeichnis |
@@ -422,6 +427,7 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | Kapitel erscheint nicht im PDF | Prüfe ob die Datei in der `chapters:`-Liste in `main.typ` eingetragen ist |
 | Import-Fehler bei `include()` | Pfade in `chapters:` sind relativ zu `main.typ` — `include("kapitel/01_einleitung.typ")` |
 | `signature muss image-Content sein` | Verwende `signature: image("images/sig.png")` statt `signature: "images/sig.png"` |
+| Alle Seiten doppelt / seltsame Formatierung | Nur ein `#show: hwr.with(...)` Block pro Datei — kein zweites `#show:` und kein Text davor |
 
 ---
 

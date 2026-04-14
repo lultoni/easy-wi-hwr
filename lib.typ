@@ -7,7 +7,7 @@
 // All parameters: see requirements/api-design.md
 
 #import "@preview/linguify:0.5.0": linguify, linguify-raw, set-database, load-ftl-data
-#import "@preview/glossarium:0.5.10": make-glossary, print-glossary, gls, glspl
+#import "@preview/glossarium:0.5.10": make-glossary, register-glossary, print-glossary, gls, glspl
 
 #import "helper/date.typ": format-date
 #import "helper/abbreviations.typ": _abk-dict, setup-abbreviations, abk
@@ -23,42 +23,50 @@
 // ---------------------------------------------------------------------------
 
 #let _assert-not-none(value, name) = {
-  assert(value != none, message: name + " ist ein Pflichtfeld und darf nicht none sein.")
+  assert(value != none, message: name + " is required and must not be none.")
 }
 
 #let _assert-doc-type(doc-type) = {
   let valid = ("ptb-1", "ptb-2", "ptb-3", "hausarbeit", "studienarbeit", "bachelorarbeit")
   assert(
     doc-type in valid,
-    message: "doc-type \"" + doc-type + "\" ist ungültig. Erlaubte Werte: " + valid.join(", "),
+    message: "doc-type \"" + doc-type + "\" is invalid. Allowed values: " + valid.join(", "),
   )
 }
 
 #let _validate(doc-type, title, authors, supervisor, company, first-examiner, second-examiner) = {
   _assert-doc-type(doc-type)
   _assert-not-none(title, "title")
-  assert(authors.len() > 0, message: "authors muss mindestens einen Eintrag enthalten.")
+
+  // Bug 4+7: Type-check authors — must be array of dicts, not a bare string or dict
+  assert(type(authors) == array,
+    message: "authors must be an array of dicts, e.g.: authors: ((name: \"...\", matrikel: \"...\"),) — note the trailing comma for single-author arrays.")
+  for a in authors {
+    assert(type(a) == dictionary,
+      message: "Each entry in authors must be a dictionary with 'name' and 'matrikel' keys, e.g.: (name: \"Max Mustermann\", matrikel: \"12345678\")")
+  }
+  assert(authors.len() > 0, message: "authors must contain at least one entry.")
 
   let needs-supervisor = doc-type in ("ptb-1", "ptb-2", "ptb-3", "hausarbeit", "studienarbeit")
   if needs-supervisor {
     assert(
       supervisor != none,
-      message: "supervisor ist Pflicht für doc-type \"" + doc-type + "\".",
+      message: "supervisor is required for doc-type \"" + doc-type + "\".",
     )
     assert(
       company != none,
-      message: "company ist Pflicht für doc-type \"" + doc-type + "\".",
+      message: "company is required for doc-type \"" + doc-type + "\".",
     )
   }
 
   if doc-type == "bachelorarbeit" {
     assert(
       first-examiner != none,
-      message: "first-examiner ist Pflicht für bachelorarbeit.",
+      message: "first-examiner is required for doc-type \"bachelorarbeit\".",
     )
     assert(
       second-examiner != none,
-      message: "second-examiner ist Pflicht für bachelorarbeit.",
+      message: "second-examiner is required for doc-type \"bachelorarbeit\".",
     )
   }
 }
@@ -132,7 +140,7 @@
   for a in authors {
     let sig = a.at("signature", default: none)
     if sig != none and type(sig) == str {
-      panic("signature muss image-Content sein, kein String-Pfad. Verwende: signature: image(\"" + sig + "\") statt signature: \"" + sig + "\"")
+      panic("signature must be image content, not a string path. Use: signature: image(\"" + sig + "\") instead of: signature: \"" + sig + "\"")
     }
   }
 
@@ -227,8 +235,11 @@
   set outline(depth: heading-depth, indent: 1em)
 
   // --- glossarium setup (must be before body) ---
+  // glossarium 0.5.10 requires both make-glossary (show rule) and register-glossary (entries).
+  // make-glossary sets up the tracking; register-glossary makes entries findable by gls()/glspl().
   if glossary.len() > 0 {
     show: make-glossary
+    register-glossary(glossary)
   }
 
   // --- abbreviations setup ---
@@ -241,7 +252,14 @@
 
   // 1. Sperrvermerk (vor Deckblatt, keine Seitennummer, nicht in Zählung — CNT-20, STR-01)
   if confidential != none {
-    render-confidentiality(confidential, company, title, authors, resolved-date, lang, city: city, group-signature: resolved-group-sig)
+    // Empty chapters list → treat as full confidentiality (Bug 12)
+    let resolved-conf = if type(confidential) == dictionary {
+      let chs = confidential.at("chapters", default: ())
+      if chs.len() == 0 { true } else { confidential }
+    } else {
+      confidential
+    }
+    render-confidentiality(resolved-conf, company, title, authors, resolved-date, lang, city: city, group-signature: resolved-group-sig)
   }
 
   // 2. Deckblatt: Seitenzähler startet bei I (röm.), aber Nummer nicht sichtbar (STR-02)
@@ -274,6 +292,9 @@
   // pagebreak(weak: true): new page before each chapter; weak prevents double-break if chapter
   // itself starts with #pagebreak().
   for ch in chapters {
+    if type(ch) == str {
+      panic("chapters entries must use include(), not string paths. Use: chapters: (include(\"" + ch + "\"),) instead of: chapters: (\"" + ch + "\",)")
+    }
     pagebreak(weak: true)
     ch
   }
@@ -289,17 +310,24 @@
   }
 
   // 6. Literaturverzeichnis (STR-08)
+  // Title is forced via l10n (DE: "Literaturverzeichnis", EN: "References") — Bug 8
   if bibliography != none {
     pagebreak(weak: true)
-    // citation-style: built-in name ("apa") → string; custom CSL via read("file.csl") → string
-    // containing XML. Typst's set bibliography(style:) needs bytes for raw CSL content.
-    let resolved-style = if type(citation-style) == str and citation-style.starts-with("<") {
+    // citation-style: built-in name ("apa") → string; "harvard-anglia-ruskin-university" → bundled CSL;
+    // custom CSL via read("file.csl") → string containing XML.
+    let resolved-style = if citation-style == "harvard-anglia-ruskin-university" {
+      bytes(read("styles/harvard-anglia-ruskin-university.csl"))
+    } else if type(citation-style) == str and citation-style.starts-with("<") {
       bytes(citation-style)
     } else {
       citation-style
     }
-    set _bibliography(style: resolved-style)
-    bibliography
+    heading(level: 1, numbering: none, outlined: true)[#linguify("bibliography-title")]
+    {
+      show heading: none  // Suppress the bibliography's own heading
+      set _bibliography(style: resolved-style)
+      bibliography
+    }
   }
 
   // 7. Anhang: user-Einträge + KI-Verzeichnis automatisch als letztes Item (STR-09, STR-12)

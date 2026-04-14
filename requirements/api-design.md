@@ -89,7 +89,7 @@ ai-tools: (
 - Default: `ai-tools: ()` → kein KI-Verzeichnis wird gerendert, kein Anhang-Item
 - Wenn befüllt: Tabelle wird automatisch gerendert (Format aus §3.8 der Richtlinien); erscheint als letztes Anhang-Item nach user-definierten `appendix`-Einträgen
 - Spalten: KI-Tool | Einsatzform | Betroffene Teile | Bemerkungen
-- `bemerkungen` ist optional pro Eintrag (default leer)
+- `remarks` (oder Alias `bemerkungen`) ist optional pro Eintrag (default leer)
 - Prompts-Einreichung: User kann Prompts in `bemerkungen` inline angeben ODER auf separaten Anhang-Eintrag verweisen ("Prompts: siehe Anhang X"). Template erzwingt kein Format.
 
 ## Anhang-Reihenfolge (Gesamtstruktur)
@@ -135,7 +135,7 @@ confidential: (
   citation-style: "apa",
   // citation-style: Zitierformat.
   //   Deutsch (default): "apa"
-  //   Englisch (laut HWR §6): "harvard-anglia-ruskin-university"
+  //   Englisch (laut HWR §6): "harvard-anglia-ruskin-university" (CSL im Package enthalten)
   //   Eigene CSL-Datei: read("mein-stil.csl")
   //     → read() wird in main.typ aufgelöst, Pfad relativ zu main.typ
   //   Prof hat anderen Stil vorgegeben: entsprechende .csl-Datei verwenden
@@ -144,12 +144,16 @@ confidential: (
 )
 ```
 
+**Titel automatisch:** Der Bibliography-Heading wird automatisch per l10n gesetzt
+(DE: "Literaturverzeichnis", EN: "References"). Der `title:`-Parameter im `bibliography()`-Aufruf
+wird ignoriert — der User muss ihn nicht angeben.
+
 ### Wann welcher Zitierstil?
 
 | Situation | Stil |
 |---|---|
 | Deutsche Arbeit, kein besonderes Vorgabe | `"apa"` (default) |
-| Englische Arbeit (§6 Richtlinien) | `"harvard-anglia-ruskin-university"` |
+| Englische Arbeit (§6 Richtlinien) | `"harvard-anglia-ruskin-university"` (CSL im Package enthalten) |
 | Prof hat konkreten Stil vorgegeben | `read("datei.csl")` |
 | Ich bin mir nicht sicher | Betreuer fragen — und dann hier eintragen |
 
@@ -423,8 +427,8 @@ Freitext. Standard ist "Berlin" (HWR-Standort), kann überschrieben werden. `[DE
 
   appendix: (),              // Array von (title, content)
 
-  bibliography: bibliography("refs.bib"),  // oder none; auskommentieren = auto-suche refs.bib
-  citation-style: "apa",     // "apa" | "harvard-anglia-ruskin-university" | read("datei.csl")
+  bibliography: bibliography("refs.bib"),  // title: wird automatisch per l10n gesetzt
+  citation-style: "apa",     // "apa" | "harvard-anglia-ruskin-university" (bundled CSL) | read("datei.csl")
 
   heading-depth: 4,          // 1–4, default 4
 

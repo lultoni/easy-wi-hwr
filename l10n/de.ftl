@@ -21,6 +21,12 @@ appendix-label = Anhang
 figure-prefix = Abb.
 table-prefix = Tab.
 
+## Spaltenüberschriften in Abbildungs-/Tabellenverzeichnis
+
+index-col-title = Titel
+index-col-page = Seite
+index-col-number = Nr.
+
 ## Abstract
 
 abstract-title = Abstract

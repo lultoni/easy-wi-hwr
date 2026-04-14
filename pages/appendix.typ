@@ -56,7 +56,7 @@
       entry.at("tool",        default: ""),
       entry.at("usage",       default: ""),
       entry.at("chapters",    default: ""),
-      entry.at("bemerkungen", default: "—"),
+      entry.at("remarks", default: entry.at("bemerkungen", default: "—")),
     )).flatten()
   )
 

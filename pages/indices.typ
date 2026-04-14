@@ -81,7 +81,7 @@
       grid(
         columns: (60pt, 1fr, auto),
         align: left,
-        [*#fig-prefix Nr.*], [*Titel*], [*Seite*],
+        [*#fig-prefix #linguify("index-col-number")*], [*#linguify("index-col-title")*], [*#linguify("index-col-page")*],
       )
       v(0.5em)
 
@@ -114,7 +114,7 @@
       grid(
         columns: (60pt, 1fr, auto),
         align: left,
-        [*#tab-prefix Nr.*], [*Titel*], [*Seite*],
+        [*#tab-prefix #linguify("index-col-number")*], [*#linguify("index-col-title")*], [*#linguify("index-col-page")*],
       )
       v(0.5em)
 
