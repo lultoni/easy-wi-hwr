@@ -3,6 +3,10 @@
 //
 // Alle Formatierung erfolgt automatisch. Du arbeitest nur in dieser Datei
 // und in deinen Kapiteldateien unter kapitel/.
+//
+// WICHTIG: Der #show:-Block muss der erste Aufruf in dieser Datei sein.
+// Schreibe keinen Text und kein zweites #show: davor — sonst wird
+// die Formatierung nicht korrekt angewendet.
 
 #import "@preview/easy-wi-hwr:0.1.1": hwr, abk, gls, glspl
 
@@ -96,7 +100,7 @@
       tool:       "ChatGPT 4o",
       usage:      "Textvorschläge für Einleitung, im Text gekennzeichnet",
       chapters:   "Kapitel 1, S. 3",
-      bemerkungen: "Prompts: siehe Anhang 1",
+      remarks:    "Prompts: siehe Anhang 1",  // auch "bemerkungen:" funktioniert
     ),
     (
       tool:     "DeepL Translator",
@@ -107,6 +111,7 @@
 
   // Kapitel in der gewünschten Reihenfolge:
   // include() wird hier (in main.typ) aufgerufen, daher sind Pfade relativ zu main.typ.
+  // Jedes Kapitel beginnt automatisch auf einer neuen Seite.
   chapters: (
     include("kapitel/01_einleitung.typ"),
     include("kapitel/02_grundlagen.typ"),
@@ -127,32 +132,36 @@
   ),
 
   // Bibliographie:
-  bibliography: bibliography("refs.bib", title: "Literaturverzeichnis"),
+  // Der Titel wird automatisch gesetzt (DE: "Literaturverzeichnis", EN: "References").
+  bibliography: bibliography("refs.bib"),
   citation-style: "apa",
-  // Zitierstile: "apa" (DE default) | "harvard-anglia-ruskin-university" (EN)
+  // Zitierstile: "apa" (DE default) | "harvard-anglia-ruskin-university" (EN, §6)
   // Eigene CSL-Datei: citation-style: read("mein-stil.csl")
   //   → read() wird hier in main.typ aufgelöst, daher Pfad relativ zu main.typ
 
   // Weitere Einstellungen:
-  heading-depth: 4,        // TOC-Tiefe: 1–4 (default: 4)
-  declaration-lang: auto,  // auto = folgt lang | "de" = immer Deutsch (rechtssicher)
-  city: "Berlin",          // Ort für Unterschriftsfeld (default: "Berlin")
+  heading-depth: 4,         // TOC-Tiefe: 1–4 (default: 4)
+  declaration-lang: auto,   // auto = folgt lang | "de" = immer Deutsch (rechtssicher)
+  city: "Berlin",           // Ort für Unterschriftsfeld (default: "Berlin")
   show-appendix-toc: false, // true = optionales Anhangsverzeichnis vor Anhang-Einträgen einfügen
                             // (HWR §3.10: "ist es möglich" — nicht Pflicht)
-  // group-signature: auto,  // auto/true = alle Autoren unterschreiben (default)
+  // group-signature: auto, // auto/true = alle Autoren unterschreiben (default)
                             // false = nur erster Autor unterschreibt (bei Gruppenarbeit)
                             // HINWEIS bei false: Bitte mit dem Prüfer abklären, ob eine
                             // stellvertretende Unterschrift akzeptiert wird.
 )
 
 // HINWEIS: Deine Kapitel werden über die chapters:-Liste oben eingebunden.
+// Jedes Kapitel startet dort automatisch auf einer neuen Seite.
 //
 // ALTERNATIVE: Du kannst auch alles direkt hier schreiben, ohne separate
 // Kapitel-Dateien. Dafür chapters: () leer lassen (oder die Zeile löschen)
-// und deinen Text einfach hier drunter schreiben:
+// und deinen Text einfach hier drunter schreiben.
+// Zwischen Kapiteln #pagebreak() einfügen, damit jedes auf einer neuen Seite beginnt:
 //
 //   = Einleitung
 //   Hier beginnt mein erster Absatz...
 //
-//   == Hintergrund
+//   #pagebreak()
+//   = Grundlagen
 //   Weiterer Text...

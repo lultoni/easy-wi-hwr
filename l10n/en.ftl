@@ -21,6 +21,12 @@ appendix-label = Appendix
 figure-prefix = Fig.
 table-prefix = Tab.
 
+## Column headers in figure/table indices
+
+index-col-title = Title
+index-col-page = Page
+index-col-number = No.
+
 ## Abstract
 
 abstract-title = Abstract
@@ -55,7 +61,7 @@ confidential-text-all =
 ## Declaration of Authorship
 
 declaration-title = Declaration of Authorship
-declaration-date-label =
+declaration-date-label = {""}
 declaration-place-date = Place, Date
 declaration-signature = Signature
 

@@ -17,7 +17,7 @@
   // Force declaration language for this page only
   set text(lang: decl-lang)
 
-  heading(level: 1, numbering: none, outlined: true)[#linguify("declaration-title")]
+  heading(level: 1, numbering: none, outlined: true)[#linguify("declaration-title", lang: decl-lang)]
 
   v(1.5em)
 
