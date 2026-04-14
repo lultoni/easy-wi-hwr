@@ -400,7 +400,7 @@ _generate_main_typ() {
 //
 // ============================================================
 
-#import "@preview/easy-wi-hwr:0.1.0": hwr, abk
+#import "@preview/easy-wi-hwr:0.1.1": hwr, abk
 
 #show: hwr.with(
 
@@ -488,6 +488,7 @@ ${CHAPTER_INCLUDES}  ),
   bibliography: bibliography("refs.bib", title: "Literaturverzeichnis"),
   citation-style: "apa",
   // Englische Arbeit? Dann: citation-style: "harvard-anglia-ruskin-university"
+  // Eigene CSL-Datei?  Dann: citation-style: read("mein-stil.csl")
 
 )
 // ── Fertig mit den Einstellungen! ──────────────────────

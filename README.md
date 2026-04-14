@@ -14,6 +14,8 @@ Du konzentrierst dich auf den Inhalt. Das Template erledigt den Rest:
 - Ehrenwörtliche Erklärung mit 2025 KI-Klausel
 - KI-Verzeichnis (wenn KI-Tools genutzt wurden)
 
+> **Etwas funktioniert nicht?** → [Häufige Probleme](#häufige-probleme)
+
 ---
 
 ## Was ist Typst?
@@ -90,7 +92,7 @@ Das Template verwendet **Times New Roman** (HWR-Vorschrift).
 ### Weg A — Typst Universe (ein Befehl)
 
 ```bash
-typst init @preview/easy-wi-hwr:0.1.0 meine-arbeit
+typst init @preview/easy-wi-hwr:0.1.1 meine-arbeit
 cd meine-arbeit
 typst watch main.typ   # Live-Vorschau, Beenden: Ctrl+C
 ```
@@ -168,6 +170,26 @@ abbreviations: (
   "ERP": "Enterprise Resource Planning",
 ),
 ```
+
+**Alternative: Alles in einer Datei** — Du kannst auch ohne separate Kapitel-Dateien arbeiten. Lass `chapters:` leer und schreibe deinen gesamten Text direkt in `main.typ` nach dem Einstellungsblock:
+
+```typst
+#show: hwr.with(
+  doc-type: "ptb-1",
+  title: "Mein Titel",
+  // ... restliche Einstellungen ...
+)
+
+= Einleitung
+
+Hier beginnt mein Text direkt in main.typ.
+
+== Hintergrund
+
+Weiterer Text...
+```
+
+Für kürzere Arbeiten (z.B. Hausarbeiten) ist das oft einfacher. Für längere Arbeiten empfehlen sich separate Dateien in `kapitel/`.
 
 ---
 
@@ -275,7 +297,7 @@ Statt einer leeren Linie zum handschriftlichen Unterschreiben kannst du ein Bild
 
 ```typst
 authors: (
-  (name: "Max Mustermann", matrikel: "12345678", signature: "images/signatur_max.png"),
+  (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signatur_max.png")),
 ),
 ```
 
@@ -318,10 +340,11 @@ Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzei
 
 ## Gut zu wissen
 
-**Zitierstil-Wahl:** Standard ist APA (für deutschsprachige Arbeiten). Wenn dein Betreuer einen anderen Stil vorgibt, kannst du eine eigene `.csl`-Datei aus dem [Zotero Style Repository](https://www.zotero.org/styles) herunterladen und direkt referenzieren:
+**Zitierstil-Wahl:** Standard ist APA (für deutschsprachige Arbeiten). Wenn dein Betreuer einen anderen Stil vorgibt, kannst du eine eigene `.csl`-Datei aus dem [Zotero Style Repository](https://www.zotero.org/styles) herunterladen und per `read()` einbinden:
 ```typst
-citation-style: "./mein-stil.csl",
+citation-style: read("mein-stil.csl"),
 ```
+`read()` wird in `main.typ` aufgelöst — der Pfad ist also relativ zu `main.typ`.
 
 **Abkürzungsverzeichnis erscheint automatisch**, aber nur wenn:
 - Abkürzungen in `abbreviations:` eingetragen sind, UND
@@ -372,7 +395,7 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | `appendix` | `()` | Anhang-Einträge: `(title: "...", content: include(...))` |
 | `show-appendix-toc` | `false` | `true` = optionales Anhangsverzeichnis vor den Anhang-Einträgen (HWR §3.10) |
 | `bibliography` | — | `bibliography("refs.bib", title: "Literaturverzeichnis")` |
-| `citation-style` | `"apa"` | Zitierstil: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN), oder Pfad zu `.csl`-Datei |
+| `citation-style` | `"apa"` | Zitierstil: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN), oder `read("datei.csl")` |
 | `heading-depth` | `4` | TOC-Tiefe 1–4 (max. 4 laut HWR) |
 | `declaration-lang` | `auto` | Sprache der Ehrenwörtlichen Erklärung — `auto` folgt `lang`, `"de"` immer Deutsch |
 | `city` | `"Berlin"` | Ort im Unterschriftsfeld der Ehrenwörtlichen Erklärung |
@@ -384,7 +407,7 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 |---|---|---|
 | `name` | Ja | Vollständiger Name |
 | `matrikel` | Ja | Matrikelnummer |
-| `signature` | Nein | Pfad zur Unterschriften-Bilddatei (PNG/SVG), z.B. `"images/signatur.png"` |
+| `signature` | Nein | Unterschriften-Bild als Content, z.B. `image("images/signatur.png")` |
 
 ---
 
@@ -400,6 +423,7 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | Abbildungsverzeichnis fehlt | Erscheint erst ab 5 Abbildungen (HWR-Anforderung) |
 | Kapitel erscheint nicht im PDF | Prüfe ob die Datei in der `chapters:`-Liste in `main.typ` eingetragen ist |
 | Import-Fehler bei `include()` | Pfade in `chapters:` sind relativ zu `main.typ` — `include("kapitel/01_einleitung.typ")` |
+| `signature muss image-Content sein` | Verwende `signature: image("images/sig.png")` statt `signature: "images/sig.png"` |
 
 ---
 

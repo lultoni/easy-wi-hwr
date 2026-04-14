@@ -86,7 +86,7 @@
   let sig-authors = if group-signature { authors } else { (authors.at(0),) }
 
   for a in sig-authors {
-    let sig-path = a.at("signature", default: none)
+    let sig = a.at("signature", default: none)
     block(breakable: false)[
       #grid(
         columns: (1fr, 1fr),
@@ -96,9 +96,9 @@
           #line(length: 100%)
           #city, #linguify("declaration-place-date")
         ],
-        if sig-path != none {
+        if sig != none {
           [
-            #image(sig-path, height: 1.5cm)
+            #block(height: 1.5cm)[#set image(height: 100%); #sig]
             #line(length: 100%)
             #linguify("declaration-signature") — #a.name
           ]

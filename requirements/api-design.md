@@ -36,11 +36,11 @@ authors: (
 Optionales `signature:`-Feld pro Autor — wenn angegeben, wird das Bild im Unterschriftsfeld gerendert statt einer leeren Linie:
 ```typst
 authors: (
-  (name: "Max Mustermann", matrikel: "12345678", signature: "images/signature_max.png"),
-  (name: "Lisa Müller",    matrikel: "87654321", signature: "images/signature_lisa.svg"),
+  (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signature_max.png")),
+  (name: "Lisa Müller",    matrikel: "87654321", signature: image("images/signature_lisa.svg")),
 ),
 ```
-- Pfad relativ zu `main.typ`
+- `image()` wird in `main.typ` aufgerufen → Pfad relativ zu `main.typ` (gleiche Auflösung wie `chapters` und `appendix`)
 - Unterstützte Formate: PNG, SVG, JPEG (alles was Typst `image()` versteht)
 - Ohne `signature:`: leere Linie zum handschriftlichen Unterschreiben
 - Beispiel-SVG: `template/images/signature_example.svg`
@@ -136,7 +136,8 @@ confidential: (
   // citation-style: Zitierformat.
   //   Deutsch (default): "apa"
   //   Englisch (laut HWR §6): "harvard-anglia-ruskin-university"
-  //   Eigene CSL-Datei: "/pfad/zur/datei.csl"
+  //   Eigene CSL-Datei: read("mein-stil.csl")
+  //     → read() wird in main.typ aufgelöst, Pfad relativ zu main.typ
   //   Prof hat anderen Stil vorgegeben: entsprechende .csl-Datei verwenden
   //   Mischung innerhalb einer Arbeit ist NICHT erlaubt (§3.4.1)
   //   Im Zweifel: Betreuer fragen.
@@ -149,7 +150,7 @@ confidential: (
 |---|---|
 | Deutsche Arbeit, kein besonderes Vorgabe | `"apa"` (default) |
 | Englische Arbeit (§6 Richtlinien) | `"harvard-anglia-ruskin-university"` |
-| Prof hat konkreten Stil vorgegeben | Entsprechende `.csl`-Datei |
+| Prof hat konkreten Stil vorgegeben | `read("datei.csl")` |
 | Ich bin mir nicht sicher | Betreuer fragen — und dann hier eintragen |
 
 Ausführliche Regeldetails → `requirements/citations.md`
@@ -423,7 +424,7 @@ Freitext. Standard ist "Berlin" (HWR-Standort), kann überschrieben werden. `[DE
   appendix: (),              // Array von (title, content)
 
   bibliography: bibliography("refs.bib"),  // oder none; auskommentieren = auto-suche refs.bib
-  citation-style: "apa",     // "apa" | "harvard-anglia-ruskin-university" | ".csl-Pfad"
+  citation-style: "apa",     // "apa" | "harvard-anglia-ruskin-university" | read("datei.csl")
 
   heading-depth: 4,          // 1–4, default 4
 

@@ -1,13 +1,21 @@
 // anhang/c_abbildung.typ
 //
 // Beispiel: Bild als Anhang-Inhalt.
-// Ersetze placeholder.svg durch dein eigenes Bild.
+// Ersetze den Platzhalter durch dein eigenes Bild:
+//
+//   #figure(
+//     image("../images/mein-bild.png", width: 90%),
+//     caption: [Beschreibung des Bildes.],
+//   )
 //
 // Unterstützte Formate: PNG, JPEG, SVG, GIF
-// Empfehlung: Bilder in images/ ablegen, z.B. images/mein-bild.png
-// Dann hier referenzieren: image("../images/mein-bild.png", width: 90%)
+// Empfehlung: Bilder in images/ ablegen
 
 #figure(
-  image("../images/placeholder.svg", width: 90%),
+  rect(width: 90%, height: 5cm, stroke: 0.5pt + gray)[
+    #align(center + horizon)[
+      #text(fill: gray)[Hier dein Bild einfügen — siehe Kommentar oben.]
+    ]
+  ],
   caption: [Beispiel: Screenshot des ERP-Dashboards nach erfolgreicher Implementierung.],
 )

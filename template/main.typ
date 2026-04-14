@@ -4,7 +4,7 @@
 // Alle Formatierung erfolgt automatisch. Du arbeitest nur in dieser Datei
 // und in deinen Kapiteldateien unter kapitel/.
 
-#import "@preview/easy-wi-hwr:0.1.0": hwr, abk, gls, glspl
+#import "@preview/easy-wi-hwr:0.1.1": hwr, abk, gls, glspl
 
 #show: hwr.with(
   // === PFLICHTFELDER ===
@@ -22,11 +22,11 @@
     // Digitale Unterschrift einbinden (optional):
     // Scanne deine Unterschrift auf weißem Papier, speichere als PNG/SVG unter images/
     // und füge das Feld signature: hinzu — dann erscheint das Bild statt der leeren Linie:
-    // (name: "Max Mustermann", matrikel: "12345678", signature: "images/signature_max.svg"),
-    // (name: "Lisa Müller",    matrikel: "87654321", signature: "images/signature_lisa.png"),
+    // (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signature_max.svg")),
+    // (name: "Lisa Müller",    matrikel: "87654321", signature: image("images/signature_lisa.png")),
     //
     // Beispiel-Unterschrift (zum Ausprobieren, dann ersetzen):
-    // (name: "Max Mustermann", matrikel: "12345678", signature: "images/signature_example.svg"),
+    // (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signature_example.svg")),
   ),
 
   // === BEDINGT PFLICHT ===
@@ -129,7 +129,9 @@
   // Bibliographie:
   bibliography: bibliography("refs.bib", title: "Literaturverzeichnis"),
   citation-style: "apa",
-  // Zitierstile: "apa" (DE default) | "harvard-anglia-ruskin-university" (EN) | "pfad/zur/datei.csl"
+  // Zitierstile: "apa" (DE default) | "harvard-anglia-ruskin-university" (EN)
+  // Eigene CSL-Datei: citation-style: read("mein-stil.csl")
+  //   → read() wird hier in main.typ aufgelöst, daher Pfad relativ zu main.typ
 
   // Weitere Einstellungen:
   heading-depth: 4,        // TOC-Tiefe: 1–4 (default: 4)
@@ -143,6 +145,14 @@
                             // stellvertretende Unterschrift akzeptiert wird.
 )
 
-// HINWEIS: Alles ab hier ist Haupttextinhalt.
-// Deine Kapitel werden über die chapters:-Liste eingebunden.
-// Du kannst hier nichts schreiben — der Inhalt kommt aus kapitel/.
+// HINWEIS: Deine Kapitel werden über die chapters:-Liste oben eingebunden.
+//
+// ALTERNATIVE: Du kannst auch alles direkt hier schreiben, ohne separate
+// Kapitel-Dateien. Dafür chapters: () leer lassen (oder die Zeile löschen)
+// und deinen Text einfach hier drunter schreiben:
+//
+//   = Einleitung
+//   Hier beginnt mein erster Absatz...
+//
+//   == Hintergrund
+//   Weiterer Text...

@@ -67,6 +67,9 @@
 // Main template function
 // ---------------------------------------------------------------------------
 
+// Alias: the parameter `bibliography` shadows the built-in; keep a reference for set rules.
+#let _bibliography = bibliography
+
 /// Main entry point for the HWR Berlin Typst template.
 ///
 /// Usage:
@@ -123,6 +126,15 @@
 
   // --- Validation ---
   _validate(doc-type, title, authors, supervisor, company, first-examiner, second-examiner)
+
+  // Validate signature fields: must be content (image()), not string paths.
+  // String paths resolve relative to the package, not the user's project.
+  for a in authors {
+    let sig = a.at("signature", default: none)
+    if sig != none and type(sig) == str {
+      panic("signature muss image-Content sein, kein String-Pfad. Verwende: signature: image(\"" + sig + "\") statt signature: \"" + sig + "\"")
+    }
+  }
 
   // --- Resolve date ---
   let resolved-date = format-date(date, lang: lang)
@@ -279,6 +291,14 @@
   // 6. Literaturverzeichnis (STR-08)
   if bibliography != none {
     pagebreak(weak: true)
+    // citation-style: built-in name ("apa") → string; custom CSL via read("file.csl") → string
+    // containing XML. Typst's set bibliography(style:) needs bytes for raw CSL content.
+    let resolved-style = if type(citation-style) == str and citation-style.starts-with("<") {
+      bytes(citation-style)
+    } else {
+      citation-style
+    }
+    set _bibliography(style: resolved-style)
     bibliography
   }
 
