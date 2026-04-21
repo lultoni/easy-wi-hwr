@@ -63,6 +63,13 @@ confidential-text-all =
 ## Ehrenwörtliche Erklärung
 
 declaration-title = Ehrenwörtliche Erklärung
+
+## Pretty Mode
+
+pretty-warning =
+    Hinweis: Die gewählte Gestaltungsoption (Pretty Mode) ist nicht in den
+    HWR-Richtlinien vorgesehen. Bitte klären Sie vorab mit Ihrer betreuenden
+    Prüferin / Ihrem betreuenden Prüfer, ob diese Gestaltung akzeptiert wird.
 declaration-date-label = den
 declaration-place-date = Ort, Datum
 declaration-signature = Unterschrift

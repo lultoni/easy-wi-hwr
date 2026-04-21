@@ -13,7 +13,7 @@
 #        bash scripts/init.sh
 #
 #   3. Direkt aus dem Web (macOS/Linux):
-#        bash <(curl -fsSL https://raw.githubusercontent.com/lultoni/hwr-typst-template/main/scripts/init.sh)
+#        bash <(curl -fsSL https://raw.githubusercontent.com/lultoni/easy-wi-hwr/main/scripts/init.sh)
 #
 # Das Skript fragt dich nach deinen Daten und erstellt dann
 # einen neuen Projektordner mit allen nötigen Dateien.
@@ -32,7 +32,7 @@ if ! command -v typst &>/dev/null; then
   echo "  Windows: winget install --id Typst.Typst"
   echo "  Linux:   sudo snap install typst   (oder: cargo install typst-cli)"
   echo ""
-  echo "  Mehr Details: https://github.com/lultoni/hwr-typst-template#schritt-1-typst-installieren"
+  echo "  Mehr Details: https://github.com/lultoni/easy-wi-hwr#schritt-1-typst-installieren"
   echo ""
   exit 1
 fi
@@ -400,7 +400,7 @@ _generate_main_typ() {
 //
 // ============================================================
 
-#import "@preview/easy-wi-hwr:0.1.1": hwr, abk
+#import "@preview/easy-wi-hwr:0.1.2": hwr, abk
 
 #show: hwr.with(
 
@@ -534,7 +534,7 @@ print_done() {
   echo -e "  ${BOLD}Schritt 4:${RESET} Quellen in ${CYAN}${TARGET_DIR}/refs.bib${RESET} eintragen"
   echo "    → Tipp: Zotero oder Citavi können .bib-Dateien exportieren"
   echo ""
-  echo -e "  ${BOLD}Alle Optionen und Einstellungen:${RESET} ${CYAN}https://github.com/lultoni/hwr-typst-template${RESET}"
+  echo -e "  ${BOLD}Alle Optionen und Einstellungen:${RESET} ${CYAN}https://github.com/lultoni/easy-wi-hwr${RESET}"
   echo ""
   echo -e "${BOLD}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
   echo ""

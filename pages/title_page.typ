@@ -22,11 +22,126 @@
   doc-type, title, authors,
   supervisor, company, first-examiner, second-examiner,
   field-of-study, cohort, semester, date, lang,
+  school-logo: none,
+  company-logo: none,
+  pretty-title: false,
 ) = {
   let doc-label = _doc-type-labels.at(doc-type).at(lang)
   let is-bachelor = doc-type == "bachelorarbeit"
 
-  // ── Obere Hälfte: zentriert ────────────────────────────────────────────
+  if pretty-title {
+    // ── Pretty-Modus: dekoratives Deckblatt ─────────────────────────────
+    // HINWEIS: Nicht in den HWR-Richtlinien vorgesehen — bitte mit Betreuer/in absprechen.
+    let equal-spacing = 0.25fr
+
+    align(center)[
+      #v(equal-spacing)
+
+      // Logo-Zeile (Deckblatt: 1.5cm Höhe, größer als im Header)
+      #set image(height: 1.5cm)
+      #if school-logo != none and company-logo != none {
+        grid(
+          columns: (1fr, 1fr),
+          align: (center + horizon, center + horizon),
+          school-logo, company-logo,
+        )
+      } else if school-logo != none {
+        school-logo
+      } else if company-logo != none {
+        company-logo
+      }
+
+      #v(equal-spacing)
+
+      // Dokumenttyp über der Zierlinie
+      #text(size: 1em, weight: 700, baseline: -13.5pt)[#doc-label]
+      #line(length: 90%)
+      // Titel — größer und prominenter
+      #text(size: 2em, weight: 700)[#title]
+      #line(length: 90%)
+
+      #v(1.5cm)
+
+      // Autoren
+      #text(size: 1.3em, weight: "bold")[
+        #authors.map(a => a.name).join(", ")
+      ]
+
+      #v(1cm)
+
+      #if lang == "de" [vorgelegt am] else [submitted on] #date
+      #v(0.6em, weak: true)
+      $circle.filled.small$
+      #v(0.6em, weak: true)
+      #field-of-study
+      #v(0.6em, weak: true)
+      #if lang == "de" [
+        Hochschule für Wirtschaft und Recht Berlin \
+        Fachbereich Duales Studium
+      ] else [
+        Berlin School of Economics and Law (HWR Berlin) \
+        Department of Cooperative Studies
+      ]
+    ]
+
+    v(equal-spacing)
+
+    // Metadata-Tabelle
+    {
+      let entries = ()
+      for (i, a) in authors.enumerate() {
+        entries += (
+          if lang == "de" [Matrikelnummer:] else [Student ID:],
+          [#a.name — #a.matrikel],
+        )
+      }
+      if cohort != none {
+        entries += (
+          if lang == "de" [Studienjahrgang:] else [Cohort:],
+          [#cohort],
+        )
+      }
+      if semester != none {
+        entries += (
+          if lang == "de" [Studienhalbjahr:] else [Semester:],
+          [#semester],
+        )
+      }
+      if not is-bachelor and company != none {
+        entries += (
+          if lang == "de" [Ausbildungsbetrieb:] else [Partner Company:],
+          [#company],
+        )
+      }
+      if is-bachelor {
+        entries += (
+          if lang == "de" [Erstgutachterin oder \ Erstgutachter:] else [First Examiner:],
+          [#first-examiner],
+        )
+        entries += (
+          if lang == "de" [Zweitgutachterin oder \ Zweitgutachter:] else [Second Examiner:],
+          [#second-examiner],
+        )
+      } else if supervisor != none {
+        entries += (
+          if lang == "de" [Betreuende Prüferin oder \ Betreuender Prüfer:] else [Supervising Examiner:],
+          [#supervisor],
+        )
+      }
+
+      show table.cell.where(x: 0): strong
+      table(
+        columns: 2,
+        stroke: none,
+        align: left,
+        column-gutter: 5%,
+        ..entries,
+      )
+    }
+
+    v(equal-spacing)
+  } else {
+    // ── Compliant-Modus: Standard-Deckblatt (HWR-Richtlinien) ──────────
   align(center)[
     #v(2cm)
 
@@ -146,6 +261,7 @@
       )
     ]
   ]
+  }
 
   pagebreak()
 }

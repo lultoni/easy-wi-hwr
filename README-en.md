@@ -95,7 +95,7 @@ The template uses **Times New Roman** (required by HWR).
 
 Run the following command in the terminal (in the directory where you want your project folder):
 ```bash
-typst init @preview/easy-wi-hwr:0.1.1 my-paper
+typst init @preview/easy-wi-hwr:0.1.2 my-paper
 ```
 → `my-paper` is the folder name and can be changed.
 
@@ -122,7 +122,7 @@ The script asks you step by step:
 
 At the end you have a ready-to-use project folder with a pre-filled `main.typ`.
 
-> **Note:** Briefly review the script before running it: [scripts/init.sh](https://github.com/lultoni/hwr-typst-template/blob/b896349435398df149f88e27f6cb3fd92a3883e2/scripts/init.sh)
+> **Note:** Briefly review the script before running it: [scripts/init.sh](https://github.com/lultoni/easy-wi-hwr/blob/b896349435398df149f88e27f6cb3fd92a3883e2/scripts/init.sh)
 
 ---
 
@@ -341,6 +341,52 @@ All index headings, the statutory declaration, and the AI tools register switch 
 
 ---
 
+## Mermaid Diagrams (optional)
+
+You can embed Mermaid diagrams directly in Typst — no external tools needed. The `mmdr` package renders Mermaid syntax natively in your document:
+
+```typst
+#import "@preview/mmdr:0.2.1": mermaid
+
+#figure(
+  mermaid("graph TD
+    A[Literature Review] --> B[Hypothesis]
+    B --> C{Quantitative?}
+    C -->|Yes| D[Survey]
+    C -->|No| E[Interview]
+  "),
+  caption: [Research process.],
+)
+```
+
+23 diagram types are supported: flowcharts, sequence diagrams, class diagrams, ER diagrams, Gantt charts, mindmaps, pie charts, and more.
+
+> **Note:** `mmdr` uses a Rust implementation of Mermaid — visual output may differ slightly from mermaid.js in edge cases. If you need pixel-perfect mermaid.js compatibility, render diagrams externally as SVG and include them via `image()`.
+
+Details: [typst.app/universe/package/mmdr](https://typst.app/universe/package/mmdr)
+
+---
+
+## Pretty Mode (optional)
+
+You can activate a decorative cover page and logo header:
+
+```typst
+style: "pretty",
+school-logo: image("images/hwr-logo.png", height: 1.2cm),
+company-logo: image("images/firma-logo.png", height: 1.2cm),
+```
+
+**Important:** Pretty Mode is **not specified in the HWR guidelines**. Please confirm with your supervisor before using it.
+
+You can also activate individual features independently:
+- `pretty-title: true` — decorative cover page only (ornamental lines, larger title)
+- `school-logo:` / `company-logo:` — logo header on body pages only
+
+Default is `style: "compliant"` (guideline-conformant).
+
+---
+
 ## Good to Know
 
 **Citation style:** Default is APA (for German-language papers). For English papers: `citation-style: "harvard-anglia-ruskin-university"` — the CSL file is included. If your supervisor requires a different style, you can download a `.csl` file from the [Zotero Style Repository](https://www.zotero.org/styles) and include it via `read()`:
@@ -403,6 +449,10 @@ Unused abbreviations do not appear in the list.
 | `declaration-lang` | `auto` | Language of the statutory declaration — `auto` follows `lang`, `"de"` always German |
 | `city` | `"Berlin"` | City in the signature field of the statutory declaration |
 | `group-signature` | `auto` | `auto`/`true` = all authors sign; `false` = only first author |
+| `style` | `"compliant"` | `"compliant"` (guideline-conformant) or `"pretty"` (decorative, confirm with supervisor) |
+| `school-logo` | `none` | Logo on the left of the page header, e.g. `image("images/logo.png", height: 1.2cm)` |
+| `company-logo` | `none` | Logo on the right of the page header |
+| `pretty-title` | `none` | `true` = decorative cover page; overrides `style:` for the cover page |
 
 ### Fields in the `authors` Array
 
@@ -430,6 +480,44 @@ Unused abbreviations do not appear in the list.
 | Import error with `include()` | Paths in `chapters:` are relative to `main.typ` — `include("kapitel/01_einleitung.typ")` |
 | `signature muss image-Content sein` | Use `signature: image("images/sig.png")` instead of `signature: "images/sig.png"` |
 | All pages doubled / strange formatting | Only one `#show: hwr.with(...)` block per file — no second `#show:` and no text before it |
+
+---
+
+## Local Development (for template developers)
+
+If you're working on the template itself (not as a user), you need to switch the imports:
+
+**Step 1: Switch imports to local**
+
+In `template/main.typ`:
+```typst
+// Comment out this line:
+// #import "@preview/easy-wi-hwr:0.1.2": hwr, abk, gls, glspl
+// Activate this line:
+#import "../lib.typ": hwr, abk, gls, glspl
+```
+
+In `template/kapitel/01_einleitung.typ` (and all other chapter files that use `abk`):
+```typst
+// #import "@preview/easy-wi-hwr:0.1.2": abk
+#import "../../lib.typ": abk
+```
+
+**Step 2: Compile**
+
+```bash
+# Clone the repository:
+git clone https://github.com/lultoni/easy-wi-hwr.git
+cd easy-wi-hwr
+
+# Compile the template (--root . is required so Typst can resolve ../lib.typ):
+typst compile --root . template/main.typ
+
+# Live preview:
+typst watch --root . template/main.typ
+```
+
+**Before committing / publishing:** Switch imports back to `@preview/` so that users don't get errors.
 
 ---
 

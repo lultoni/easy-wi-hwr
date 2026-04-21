@@ -61,6 +61,13 @@ confidential-text-all =
 ## Declaration of Authorship
 
 declaration-title = Declaration of Authorship
+
+## Pretty Mode
+
+pretty-warning =
+    Note: The selected styling option (Pretty Mode) is not specified in the
+    HWR formatting guidelines. Please confirm with your supervising examiner
+    whether this styling is acceptable.
 declaration-date-label = {""}
 declaration-place-date = Place, Date
 declaration-signature = Signature
