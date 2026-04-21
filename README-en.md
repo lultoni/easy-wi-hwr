@@ -1,13 +1,8 @@
 # HWR Berlin — Typst Template
 
-**Deutsch:** → [README.md](README.md)
+**Deutsche Version:** → [README.md](README.md)
 
-A community-built Typst template for scientific papers at HWR Berlin (Berlin School of Economics and Law), primarily targeting students in the *Wirtschaftsinformatik* (Business Informatics) programme. It automates cover pages, tables of contents, abbreviation lists, the statutory declaration, and more — all conforming to the HWR formatting guidelines as of January 2025.
-
----
-
-Automatic formatting for Praxistransferberichte, Haus-/Studien- und Bachelorarbeiten at HWR Berlin.
-Compliant with the HWR guidelines **as of January 2025** — for all cohorts.
+A community-built Typst template for scientific papers at HWR Berlin (Berlin School of Economics and Law), primarily targeting students in the *Wirtschaftsinformatik* (Business Informatics) programme. It automates cover pages, tables of contents, abbreviation lists, the statutory declaration, and more — all conforming to the HWR formatting guidelines as of January 2025, for all cohorts.
 
 You focus on the content. The template handles the rest:
 - Cover page with all required fields
@@ -17,6 +12,27 @@ You focus on the content. The template handles the rest:
 - AI tools register (when AI tools were used)
 
 > **Something not working?** → [Common Issues](#common-issues)
+
+### Contents
+
+- [What is Typst?](#what-is-typst)
+- [Step 1: Install Typst](#step-1-install-typst)
+- [Step 2: Install the font](#step-2-install-the-font)
+- [Step 3: Set up a project](#step-3-set-up-a-project--two-options)
+- [Step 4: Writing](#step-4-writing)
+- [Step 5: Create the PDF](#step-5-create-the-pdf)
+- [References](#references)
+- [AI Tools](#ai-tools-required-if-ai-was-used)
+- [Group Work](#group-work)
+- [Digital Signature](#digital-signature-optional)
+- [Confidentiality Notice](#confidentiality-notice)
+- [English Papers](#english-papers)
+- [Mermaid Diagrams](#mermaid-diagrams-optional)
+- [Pretty Mode](#pretty-mode-optional)
+- [Good to Know](#good-to-know)
+- [All Parameters](#all-parameters-at-a-glance)
+- [Common Issues](#common-issues)
+- [Local Development](#local-development-for-template-developers)
 
 ---
 
@@ -122,7 +138,7 @@ The script asks you step by step:
 
 At the end you have a ready-to-use project folder with a pre-filled `main.typ`.
 
-> **Note:** Briefly review the script before running it: [scripts/init.sh](https://github.com/lultoni/easy-wi-hwr/blob/b896349435398df149f88e27f6cb3fd92a3883e2/scripts/init.sh)
+> **Note:** Briefly review the script before running it: [scripts/init.sh](https://github.com/lultoni/easy-wi-hwr/blob/main/scripts/init.sh)
 
 ---
 
@@ -339,6 +355,8 @@ citation-style: "harvard-anglia-ruskin-university",
 
 All index headings, the statutory declaration, and the AI tools register switch to English automatically. The Harvard CSL file (Anglia Ruskin University) is included in the template and loaded automatically — no manual download needed (HWR §6).
 
+> **Tip:** Set `declaration-lang: "de"` to keep the statutory declaration in German — this is the legally safe choice. Whether an English declaration is accepted has not been definitively established.
+
 ---
 
 ## Mermaid Diagrams (optional)
@@ -373,8 +391,8 @@ You can activate a decorative cover page and logo header:
 
 ```typst
 style: "pretty",
-school-logo: image("images/hwr-logo.png", height: 1.2cm),
-company-logo: image("images/firma-logo.png", height: 1.2cm),
+school-logo: image("images/school-logo.svg", height: 1.2cm),
+company-logo: image("images/company-logo.svg", height: 1.2cm),
 ```
 
 **Important:** Pretty Mode is **not specified in the HWR guidelines**. Please confirm with your supervisor before using it.
@@ -415,7 +433,9 @@ Unused abbreviations do not appear in the list.
 |---|---|
 | `doc-type` | Type of paper: `"ptb-1"`, `"ptb-2"`, `"ptb-3"`, `"hausarbeit"`, `"studienarbeit"`, `"bachelorarbeit"` |
 | `title` | Paper title |
-| `authors` | Array: `((name: "...", matrikel: "..."),)` |
+| `name` | Your name (shorthand for single author — equivalent to `authors: (name: "...", matrikel: "...")`) |
+| `matrikel` | Your student ID number (use together with `name:`) |
+| `authors` | Alternative: array of authors: `((name: "...", matrikel: "..."),)` — for group work or when `name:`/`matrikel:` not used |
 
 ### Required Depending on Document Type
 
@@ -446,7 +466,7 @@ Unused abbreviations do not appear in the list.
 | `bibliography` | — | `bibliography("refs.bib")` — title is set automatically |
 | `citation-style` | `"apa"` | Citation style: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN, included), or `read("file.csl")` |
 | `heading-depth` | `4` | TOC depth 1–4 (max. 4 per HWR) |
-| `declaration-lang` | `auto` | Language of the statutory declaration — `auto` follows `lang`, `"de"` always German |
+| `declaration-lang` | `auto` | Language of the statutory declaration — `auto` follows `lang`, `"de"` always German (recommended — legally safe) |
 | `city` | `"Berlin"` | City in the signature field of the statutory declaration |
 | `group-signature` | `auto` | `auto`/`true` = all authors sign; `false` = only first author |
 | `style` | `"compliant"` | `"compliant"` (guideline-conformant) or `"pretty"` (decorative, confirm with supervisor) |

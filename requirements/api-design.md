@@ -9,9 +9,8 @@ Diese Datei ist die Single Source of Truth für alle Parameter des `hwr()`-Templ
   doc-type: "ptb-1",
   lang: "de",
   title: "Mein Titel",
-  author: (
-    name: "Max Mustermann",
-    matrikel: "12345678",
+  authors: (
+    (name: "Max Mustermann", matrikel: "12345678"),
   ),
   supervisor: "Prof. Dr. Muster",
   company: "Muster GmbH",
@@ -61,7 +60,7 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis NICHT auf.
 
 **Weg 2 — Im Fließtext definieren (first-use expandiert automatisch):**
 ```typst
-#abk("API", "Application Programming Interface") // → "Application Programming Interface (API)"
+#abk("API", long: "Application Programming Interface") // → "Application Programming Interface (API)"
 // danach:
 #abk("API")  // → "API"
 ```

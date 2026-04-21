@@ -1,13 +1,8 @@
 # HWR Berlin — Typst-Template
 
-**English:** → [README-en.md](README-en.md)
+**English version:** → [README-en.md](README-en.md)
 
-**English:** A community-built Typst template for scientific papers at HWR Berlin (Berlin School of Economics and Law), primarily targeting students in the *Wirtschaftsinformatik* (Business Informatics) programme. It automates cover pages, tables of contents, abbreviation lists, the statutory declaration, and more — all conforming to the HWR formatting guidelines as of January 2025.
-
----
-
-Automatische Formatierung für Praxistransferberichte, Haus-/Studien- und Bachelorarbeiten an der HWR Berlin.
-Konform mit den HWR-Richtlinien **Stand Januar 2025** — für alle Kohorten.
+Ein Community-Typst-Template für wissenschaftliche Arbeiten an der HWR Berlin (Hochschule für Wirtschaft und Recht), primär für Studierende der *Wirtschaftsinformatik*. Automatisiert Deckblatt, Verzeichnisse, Abkürzungsliste, Ehrenwörtliche Erklärung und mehr — konform mit den HWR-Richtlinien **Stand Januar 2025**, für alle Kohorten.
 
 Du konzentrierst dich auf den Inhalt. Das Template erledigt den Rest:
 - Deckblatt mit allen Pflichtangaben
@@ -17,6 +12,27 @@ Du konzentrierst dich auf den Inhalt. Das Template erledigt den Rest:
 - KI-Verzeichnis (wenn KI-Tools genutzt wurden)
 
 > **Etwas funktioniert nicht?** → [Häufige Probleme](#häufige-probleme)
+
+### Inhalt
+
+- [Was ist Typst?](#was-ist-typst)
+- [Schritt 1: Typst installieren](#schritt-1-typst-installieren)
+- [Schritt 2: Schriftart installieren](#schritt-2-schriftart-installieren)
+- [Schritt 3: Projekt einrichten](#schritt-3-projekt-einrichten--zwei-wege)
+- [Schritt 4: Schreiben](#schritt-4-schreiben)
+- [Schritt 5: PDF erstellen](#schritt-5-pdf-erstellen)
+- [Quellen eintragen](#quellen-eintragen)
+- [KI-Tools eintragen](#ki-tools-eintragen-pflicht-bei-ki-nutzung)
+- [Gruppenarbeit](#gruppenarbeit)
+- [Digitale Unterschrift](#digitale-unterschrift-einbinden-optional)
+- [Sperrvermerk](#sperrvermerk)
+- [Englische Arbeiten](#englische-arbeiten)
+- [Mermaid-Diagramme](#mermaid-diagramme-optional)
+- [Pretty Mode](#pretty-mode-optional)
+- [Gut zu wissen](#gut-zu-wissen)
+- [Alle Parameter](#alle-parameter-im-überblick)
+- [Häufige Probleme](#häufige-probleme)
+- [Lokale Entwicklung](#lokale-entwicklungkompilierung-für-template-entwickler)
 
 ---
 
@@ -122,7 +138,7 @@ Das Script fragt dich der Reihe nach:
 
 Am Ende hast du einen fertigen Projektordner mit vorausgefüllter `main.typ`.
 
-> **Hinweis:** Lies das Script kurz durch, bevor du es ausführst: [scripts/init.sh](https://github.com/lultoni/easy-wi-hwr/blob/b896349435398df149f88e27f6cb3fd92a3883e2/scripts/init.sh)
+> **Hinweis:** Lies das Script kurz durch, bevor du es ausführst: [scripts/init.sh](https://github.com/lultoni/easy-wi-hwr/blob/main/scripts/init.sh)
 
 ---
 
@@ -339,6 +355,8 @@ citation-style: "harvard-anglia-ruskin-university",
 
 Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzeichnis wechseln automatisch auf Englisch. Die Harvard-CSL-Datei (Anglia Ruskin University) ist im Template enthalten und wird automatisch geladen — kein manueller Download nötig (HWR §6).
 
+> **Tipp:** Setze `declaration-lang: "de"` damit die Ehrenwörtliche Erklärung auf Deutsch bleibt — das ist rechtlich die sichere Variante. Ob eine englische Erklärung akzeptiert wird, ist nicht verbindlich geklärt.
+
 ---
 
 ## Mermaid-Diagramme (optional)
@@ -373,8 +391,8 @@ Du kannst ein dekoratives Deckblatt und einen Logo-Header aktivieren:
 
 ```typst
 style: "pretty",
-school-logo: image("images/hwr-logo.png", height: 1.2cm),
-company-logo: image("images/firma-logo.png", height: 1.2cm),
+school-logo: image("images/school-logo.svg", height: 1.2cm),
+company-logo: image("images/company-logo.svg", height: 1.2cm),
 ```
 
 **Wichtig:** Der Pretty Mode ist **nicht in den HWR-Richtlinien vorgesehen**. Bitte vor Verwendung mit dem/der Betreuer/in absprechen.
@@ -415,7 +433,9 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 |---|---|
 | `doc-type` | Art der Arbeit: `"ptb-1"`, `"ptb-2"`, `"ptb-3"`, `"hausarbeit"`, `"studienarbeit"`, `"bachelorarbeit"` |
 | `title` | Titel der Arbeit |
-| `authors` | Array: `((name: "...", matrikel: "..."),)` |
+| `name` | Dein Name (Kurzform für Einzelperson — äquivalent zu `authors: (name: "...", matrikel: "...")`) |
+| `matrikel` | Deine Matrikelnummer (zusammen mit `name:` verwenden) |
+| `authors` | Alternativ: Array von Autoren: `((name: "...", matrikel: "..."),)` — für Gruppenarbeit oder wenn `name:`/`matrikel:` nicht verwendet |
 
 ### Je nach Dokumenttyp Pflicht
 
@@ -446,7 +466,7 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | `bibliography` | — | `bibliography("refs.bib")` — Titel wird automatisch gesetzt |
 | `citation-style` | `"apa"` | Zitierstil: `"apa"` (DE), `"harvard-anglia-ruskin-university"` (EN, mitgeliefert), oder `read("datei.csl")` |
 | `heading-depth` | `4` | TOC-Tiefe 1–4 (max. 4 laut HWR) |
-| `declaration-lang` | `auto` | Sprache der Ehrenwörtlichen Erklärung — `auto` folgt `lang`, `"de"` immer Deutsch |
+| `declaration-lang` | `auto` | Sprache der Ehrenwörtlichen Erklärung — `auto` folgt `lang`, `"de"` immer Deutsch (empfohlen — rechtssicher) |
 | `city` | `"Berlin"` | Ort im Unterschriftsfeld der Ehrenwörtlichen Erklärung |
 | `group-signature` | `auto` | `auto`/`true` = alle Autoren unterschreiben; `false` = nur erster Autor |
 | `style` | `"compliant"` | `"compliant"` (HWR-konform) oder `"pretty"` (dekorativ, mit Betreuer absprechen) |
