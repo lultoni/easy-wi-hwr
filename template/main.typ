@@ -8,7 +8,10 @@
 // Schreibe keinen Text und kein zweites #show: davor — sonst wird
 // die Formatierung nicht korrekt angewendet.
 
-#import "@preview/easy-wi-hwr:0.1.1": hwr, abk, gls, glspl
+// Für Nutzer (nach typst init @preview/easy-wi-hwr:0.1.2):
+#import "@preview/easy-wi-hwr:0.1.2": hwr, abk, gls, glspl
+// Für lokale Entwicklung:
+// #import "../lib.typ": hwr, abk, gls, glspl
 
 #show: hwr.with(
   // === PFLICHTFELDER ===
@@ -18,20 +21,21 @@
 
   title: "Digitale Transformation im Mittelstand: Chancen und Herausforderungen",
 
-  authors: (
-    (name: "Max Mustermann", matrikel: "12345678"),
-    // Weitere Autoren bei Gruppenarbeit:
-    // (name: "Lisa Müller", matrikel: "87654321"),
-    //
-    // Digitale Unterschrift einbinden (optional):
-    // Scanne deine Unterschrift auf weißem Papier, speichere als PNG/SVG unter images/
-    // und füge das Feld signature: hinzu — dann erscheint das Bild statt der leeren Linie:
-    // (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signature_max.svg")),
-    // (name: "Lisa Müller",    matrikel: "87654321", signature: image("images/signature_lisa.png")),
-    //
-    // Beispiel-Unterschrift (zum Ausprobieren, dann ersetzen):
-    // (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signature_example.svg")),
-  ),
+  // Einzelperson — einfachste Variante (top-level Felder):
+  name:     "Max Mustermann",
+  matrikel: "12345678",
+  // Mit digitaler Unterschrift (optional):
+  // signature: image("images/signature_example.svg"),
+
+  // Alternativ als dict (gleicher Effekt):
+  // authors: (name: "Max Mustermann", matrikel: "12345678"),
+  // authors: (name: "Max Mustermann", matrikel: "12345678", signature: image("images/signature_example.svg")),
+
+  // Gruppenarbeit — Array (ersetzt name:/matrikel: hier drüber):
+  // authors: (
+  //   (name: "Max Mustermann",  matrikel: "12345678"),
+  //   (name: "Lisa Müller",     matrikel: "87654321"),
+  // ),
 
   // === BEDINGT PFLICHT ===
   // Für ptb-*/hausarbeit/studienarbeit:
@@ -49,6 +53,15 @@
   semester: "3",                       // Studienhalbjahr
 
   date: auto,                          // auto = heutiges Datum | "15. März 2026" = manuell
+
+  // === GESTALTUNG ===
+  // style: "compliant",               // "compliant" (default) = HWR-konform
+                                       // "pretty" = dekoratives Deckblatt + Logo-Header
+                                       // ⚠ "pretty" ist NICHT in den Richtlinien — mit Betreuer/in absprechen!
+  // Granulare Overrides (haben Vorrang vor style: wenn gesetzt):
+  // school-logo: image("images/hwr-logo.png"),    // Logo links im Seitenkopf
+  // company-logo: image("images/firma-logo.png"), // Logo rechts im Seitenkopf
+  // pretty-title: true,               // dekoratives Deckblatt mit Zierlinien und großem Titel
 
   // Abstract (optional — auskommentieren wenn nicht benötigt):
   abstract: [
@@ -94,13 +107,16 @@
   // Das Glossar erscheint automatisch nach dem Haupttext (vor dem Literaturverzeichnis).
 
   // KI-Verzeichnis (Pflicht wenn KI-Tools verwendet, §3.8):
+  // Prompts müssen gesichert und mit der Arbeit eingereicht werden.
+  // Verweis auf das Prompt-Protokoll im Anhang (Nummer muss zur Reihenfolge passen).
   // ai-tools: (),                                  // leer = kein KI-Verzeichnis (default)
   ai-tools: (
     (
       tool:       "ChatGPT 4o",
       usage:      "Textvorschläge für Einleitung, im Text gekennzeichnet",
       chapters:   "Kapitel 1, S. 3",
-      remarks:    "Prompts: siehe Anhang 1",  // auch "bemerkungen:" funktioniert
+      remarks:    "Prompts: siehe Anhang 4",  // auch "bemerkungen:" funktioniert
+                                               // → verweist auf d_prompt_protokoll.typ
     ),
     (
       tool:     "DeepL Translator",
@@ -122,13 +138,13 @@
 
   // Anhang (optional — auskommentieren wenn nicht benötigt):
   appendix: (
-    (title: "Interviewleitfaden",  content: include("anhang/a_interviewleitfaden.typ")),
-    (title: "Rohdaten Umfrage",    content: include("anhang/b_rohdaten.typ")),
-    (title: "Screenshot Dashboard", content: include("anhang/c_abbildung.typ")),
-    // Bild als Anhang einbinden — immer in einer Anhang-Datei via #figure():
-    // (title: "Diagramm", content: include("anhang/d_diagramm.typ")),
-    // In anhang/d_diagramm.typ dann:
-    //   #figure(image("../images/diagramm.png"), caption: [Beschriftung])
+    (title: "Interviewleitfaden",     content: include("anhang/a_interviewleitfaden.typ")),
+    (title: "Rohdaten Umfrage",       content: include("anhang/b_rohdaten.typ")),
+    (title: "Screenshot Dashboard",   content: include("anhang/c_abbildung.typ")),
+    (title: "Prompt-Protokoll",       content: include("anhang/d_prompt_protokoll.typ")),
+    (title: "Interview-Transkript",   content: include("anhang/e_interview_transkript.typ")),
+    (title: "Code-Listing",           content: include("anhang/f_code_listing.typ")),
+    (title: "Mermaid-Diagramm",       content: include("anhang/g_mermaid_diagramm.typ")),
   ),
 
   // Bibliographie:

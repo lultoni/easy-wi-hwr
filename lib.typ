@@ -38,9 +38,9 @@
   _assert-doc-type(doc-type)
   _assert-not-none(title, "title")
 
-  // Bug 4+7: Type-check authors — must be array of dicts, not a bare string or dict
+  // Bug 4+7: Type-check authors — must be array of dicts (bare dict is normalized upstream)
   assert(type(authors) == array,
-    message: "authors must be an array of dicts, e.g.: authors: ((name: \"...\", matrikel: \"...\"),) — note the trailing comma for single-author arrays.")
+    message: "authors must be a dict or an array of dicts, e.g.: authors: (name: \"...\", matrikel: \"...\") for a single author, or authors: ((name: \"...\", matrikel: \"...\"), (name: \"...\", matrikel: \"...\")) for multiple authors.")
   for a in authors {
     assert(type(a) == dictionary,
       message: "Each entry in authors must be a dictionary with 'name' and 'matrikel' keys, e.g.: (name: \"Max Mustermann\", matrikel: \"12345678\")")
@@ -96,6 +96,13 @@
   title: none,
   authors: (),
 
+  // Single-author shorthand: name/matrikel/signature as top-level fields.
+  // Use instead of authors: for a single person without the dict syntax.
+  // Cannot be combined with authors: — set one or the other.
+  name: none,
+  matrikel: none,
+  signature: none,
+
   // === BEDINGT PFLICHT (je nach doc-type) ===
   supervisor: none,
   company: none,
@@ -128,9 +135,59 @@
   city: "Berlin",
   group-signature: auto,
 
+  // === GESTALTUNG (Pretty Mode) ===
+  // Top-level Shorthand: "compliant" (default) oder "pretty"
+  //   "compliant" = HWR-richtlinienkonform (kein Logo, keine dekorativen Elemente)
+  //   "pretty"    = dekoratives Deckblatt mit Logos und Zierlinien
+  // HINWEIS: "pretty" ist NICHT in den HWR-Richtlinien vorgesehen.
+  //          Bitte vor Verwendung mit dem/der Betreuer/in absprechen.
+  style: "compliant",
+
+  // Granulare Overrides (haben Vorrang vor style: wenn gesetzt):
+  school-logo: none,    // Logo links im Seitenkopf, z.B. image("images/hwr-logo.png")
+                        // Größe wird automatisch gesetzt (Header: 0.8cm, Deckblatt: 1.5cm)
+  company-logo: none,   // Logo rechts im Seitenkopf, z.B. image("images/firma-logo.png")
+  pretty-title: none,   // true = dekoratives Deckblatt (Zierlinien, größerer Titel, Logos)
+
   // show-rule body (passed automatically by #show: hwr.with(...))
   body,
 ) = {
+
+  // --- Normalize authors ---
+  // Priority 1: top-level name/matrikel/signature shorthand (single-author convenience)
+  // Normalize authors from the three supported input forms:
+  //   1. top-level name:/matrikel:/signature: — single-author shorthand
+  //   2. authors: as bare dict — single-author without array syntax
+  //   3. authors: as array of dicts — multi-author, standard form
+  // If both name: and authors: are set, authors: wins — but we error so the user
+  // notices and cleans up (ambiguous intent).
+  let authors = if name != none and (authors != () and authors != (:)) {
+    assert(false,
+      message: "Conflict: both top-level name:/matrikel: and authors: are set. " +
+               "Use one or the other — remove name:/matrikel: for multi-author mode, " +
+               "or remove authors: to keep the shorthand.")
+  } else if name != none {
+    let entry = (name: name, matrikel: matrikel)
+    let entry = if signature != none { entry + (signature: signature) } else { entry }
+    (entry,)
+  } else if type(authors) == dictionary {
+    (authors,)
+  } else {
+    authors
+  }
+
+  // --- Validate style parameter ---
+  assert(
+    style in ("compliant", "pretty"),
+    message: "style must be \"compliant\" or \"pretty\", got: \"" + str(style) + "\"",
+  )
+
+  // --- Normalize style (same pattern as author normalization) ---
+  // style: sets defaults; granular params override when explicitly set (not none).
+  let is-pretty = style == "pretty"
+  let resolved-school-logo = if school-logo != none { school-logo } else { none }
+  let resolved-company-logo = if company-logo != none { company-logo } else { none }
+  let resolved-pretty-title = if pretty-title != none { pretty-title } else { is-pretty }
 
   // --- Validation ---
   _validate(doc-type, title, authors, supervisor, company, first-examiner, second-examiner)
@@ -269,6 +326,9 @@
     doc-type, title, authors,
     supervisor, company, first-examiner, second-examiner,
     field-of-study, cohort, semester, resolved-date, lang,
+    school-logo: resolved-school-logo,
+    company-logo: resolved-company-logo,
+    pretty-title: resolved-pretty-title,
   )
 
   // 3. Vorspann: Römische Seitennummerierung sichtbar (STR-03 ff.)
@@ -284,7 +344,32 @@
 
   // 4. Haupttext: Arabische Seitennummerierung ab 1 (STR-07)
   counter(page).update(1)
-  set page(numbering: "1")
+  // Header mit Logos (nur im Haupttext, nur wenn Logos gesetzt)
+  // HINWEIS: Header mit Logos ist NICHT in den HWR-Richtlinien vorgesehen.
+  // Layout: [Logo links] [Seitennummer mittig] [Logo rechts] + hellgraue Trennlinie
+  // Logos werden im Header auf 0.8cm Höhe skaliert (Deckblatt: 1.5cm).
+  let _has-logo-header = resolved-school-logo != none or resolved-company-logo != none
+  let _page-header = if _has-logo-header {
+    context {
+      set image(height: 0.8cm)
+      grid(
+        columns: (1fr, auto, 1fr),
+        align: (left + horizon, center + horizon, right + horizon),
+        if resolved-school-logo != none { resolved-school-logo } else { [] },
+        text(size: 10pt)[#counter(page).display()],
+        if resolved-company-logo != none { resolved-company-logo } else { [] },
+      )
+      v(2pt)
+      line(length: 100%, stroke: 0.5pt + luma(180))
+    }
+  }
+  // Wenn Logo-Header aktiv: numbering: none unterdrückt die Standard-Seitennummer
+  // (sie wird stattdessen im Header-Grid mittig gerendert).
+  // Ohne Logos: numbering: "1" mit number-align: top + right wie gewohnt.
+  set page(
+    numbering: if _has-logo-header { none } else { "1" },
+    header: _page-header,
+  )
 
   // chapters: array of included content (api-design §11)
   // User passes: chapters: (include("kapitel/01.typ"), include("kapitel/02.typ"), ...)
@@ -344,5 +429,5 @@
 // Re-exports for use in chapter files
 // ---------------------------------------------------------------------------
 // Users import these from lib.typ in their kapitel/ files:
-//   #import "@preview/easy-wi-hwr:0.1.1": abk, gls, glspl
+//   #import "@preview/easy-wi-hwr:0.1.2": abk, gls, glspl
 

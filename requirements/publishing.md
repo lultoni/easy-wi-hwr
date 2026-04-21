@@ -6,10 +6,10 @@ Diese Datei dokumentiert den Veröffentlichungsprozess für das Template auf Typ
 
 | Repo | Zweck | Pfad |
 |---|---|---|
-| `lultoni/hwr-typst-template` | Development — hier wird normal gearbeitet | (this repo) |
+| `lultoni/easy-wi-hwr` | Development — hier wird normal gearbeitet | (this repo) |
 | `lultoni/packages` (fork von `typst/packages`) | Publishing — hier landen Releases | `../typst-packages/` |
 
-- Entwicklung läuft ausschließlich in `hwr-typst-template/`.
+- Entwicklung läuft ausschließlich in `easy-wi-hwr/`.
 - Der Fork `lultoni/packages` ist ein reines Publish-Vehikel — keine Entwicklung dort.
 - Jedes neue Release = neuer Ordner `packages/preview/easy-wi-hwr/{version}/` im Fork + neuer PR.
 - `scripts/publish.sh` automatisiert das Kopieren und Vorbereiten des Release-Ordners.

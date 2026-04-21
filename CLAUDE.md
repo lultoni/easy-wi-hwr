@@ -12,7 +12,7 @@ and the AI tools register are fully automatic.
 ## Repository Structure
 
 ```
-hwr-typst-template/
+easy-wi-hwr/
 ├── lib.typ                  # Main template entry point; public API: hwr(), abk(), gls(), glspl()
 ├── typst.toml               # Package metadata (version is source of truth)
 ├── template/                # Example/starter files for users

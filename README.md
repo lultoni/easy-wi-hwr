@@ -95,7 +95,7 @@ Das Template verwendet **Times New Roman** (HWR-Vorschrift).
 
 Führe folgenden Befehl im Terminal aus (in dem Verzeichniss, wo du deinen Projektordner willst):
 ```bash
-typst init @preview/easy-wi-hwr:0.1.1 meine-arbeit
+typst init @preview/easy-wi-hwr:0.1.2 meine-arbeit
 ```
 → `meine-arbeit` ist der Titel des Ordners und kann angepasst werden
 
@@ -122,7 +122,7 @@ Das Script fragt dich der Reihe nach:
 
 Am Ende hast du einen fertigen Projektordner mit vorausgefüllter `main.typ`.
 
-> **Hinweis:** Lies das Script kurz durch, bevor du es ausführst: [scripts/init.sh](https://github.com/lultoni/hwr-typst-template/blob/b896349435398df149f88e27f6cb3fd92a3883e2/scripts/init.sh)
+> **Hinweis:** Lies das Script kurz durch, bevor du es ausführst: [scripts/init.sh](https://github.com/lultoni/easy-wi-hwr/blob/b896349435398df149f88e27f6cb3fd92a3883e2/scripts/init.sh)
 
 ---
 
@@ -341,6 +341,52 @@ Alle Verzeichnisüberschriften, die Ehrenwörtliche Erklärung und das KI-Verzei
 
 ---
 
+## Mermaid-Diagramme (optional)
+
+Du kannst Mermaid-Diagramme direkt in Typst einbetten — ohne externe Tools. Das Package `mmdr` rendert Mermaid-Syntax nativ im Dokument:
+
+```typst
+#import "@preview/mmdr:0.2.1": mermaid
+
+#figure(
+  mermaid("graph TD
+    A[Literaturrecherche] --> B[Hypothesenbildung]
+    B --> C{Quantitativ?}
+    C -->|Ja| D[Fragebogen]
+    C -->|Nein| E[Interview]
+  "),
+  caption: [Forschungsprozess.],
+)
+```
+
+Unterstützt werden 23 Diagramm-Typen: Flowcharts, Sequenzdiagramme, Klassendiagramme, ER-Diagramme, Gantt-Charts, Mindmaps, Pie Charts u.v.m.
+
+> **Hinweis:** `mmdr` nutzt eine Rust-Implementierung von Mermaid — die visuelle Ausgabe kann in Randfällen leicht von mermaid.js abweichen. Wenn du pixelgenaue mermaid.js-Kompatibilität brauchst, rendere die Diagramme extern als SVG und binde sie per `image()` ein.
+
+Details: [typst.app/universe/package/mmdr](https://typst.app/universe/package/mmdr)
+
+---
+
+## Pretty Mode (optional)
+
+Du kannst ein dekoratives Deckblatt und einen Logo-Header aktivieren:
+
+```typst
+style: "pretty",
+school-logo: image("images/hwr-logo.png", height: 1.2cm),
+company-logo: image("images/firma-logo.png", height: 1.2cm),
+```
+
+**Wichtig:** Der Pretty Mode ist **nicht in den HWR-Richtlinien vorgesehen**. Bitte vor Verwendung mit dem/der Betreuer/in absprechen.
+
+Du kannst auch einzelne Features unabhängig aktivieren:
+- `pretty-title: true` — nur dekoratives Deckblatt (Zierlinien, größerer Titel)
+- `school-logo:` / `company-logo:` — nur Logo-Header im Haupttext
+
+Standard ist `style: "compliant"` (richtlinienkonform).
+
+---
+
 ## Gut zu wissen
 
 **Zitierstil-Wahl:** Standard ist APA (für deutschsprachige Arbeiten). Für englischsprachige Arbeiten: `citation-style: "harvard-anglia-ruskin-university"` — die CSL-Datei ist im Template enthalten. Wenn dein Betreuer einen anderen Stil vorgibt, kannst du eine eigene `.csl`-Datei aus dem [Zotero Style Repository](https://www.zotero.org/styles) herunterladen und per `read()` einbinden:
@@ -403,6 +449,10 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | `declaration-lang` | `auto` | Sprache der Ehrenwörtlichen Erklärung — `auto` folgt `lang`, `"de"` immer Deutsch |
 | `city` | `"Berlin"` | Ort im Unterschriftsfeld der Ehrenwörtlichen Erklärung |
 | `group-signature` | `auto` | `auto`/`true` = alle Autoren unterschreiben; `false` = nur erster Autor |
+| `style` | `"compliant"` | `"compliant"` (HWR-konform) oder `"pretty"` (dekorativ, mit Betreuer absprechen) |
+| `school-logo` | `none` | Logo links im Seitenkopf, z.B. `image("images/logo.png", height: 1.2cm)` |
+| `company-logo` | `none` | Logo rechts im Seitenkopf |
+| `pretty-title` | `none` | `true` = dekoratives Deckblatt; überschreibt `style:` für das Deckblatt |
 
 ### Felder im `authors`-Array
 
@@ -430,6 +480,44 @@ Nicht verwendete Abkürzungen tauchen im Verzeichnis nicht auf.
 | Import-Fehler bei `include()` | Pfade in `chapters:` sind relativ zu `main.typ` — `include("kapitel/01_einleitung.typ")` |
 | `signature muss image-Content sein` | Verwende `signature: image("images/sig.png")` statt `signature: "images/sig.png"` |
 | Alle Seiten doppelt / seltsame Formatierung | Nur ein `#show: hwr.with(...)` Block pro Datei — kein zweites `#show:` und kein Text davor |
+
+---
+
+## Lokale Entwicklung/Kompilierung (für Template-Entwickler)
+
+Wenn du am Template selbst arbeitest (nicht als Nutzer), musst du die Imports umschalten:
+
+**Schritt 1: Imports auf lokal umstellen**
+
+In `template/main.typ`:
+```typst
+// Diese Zeile auskommentieren:
+// #import "@preview/easy-wi-hwr:0.1.2": hwr, abk, gls, glspl
+// Diese Zeile aktivieren:
+#import "../lib.typ": hwr, abk, gls, glspl
+```
+
+In `template/kapitel/01_einleitung.typ` (und allen anderen Kapitel-Dateien die `abk` nutzen):
+```typst
+// #import "@preview/easy-wi-hwr:0.1.2": abk
+#import "../../lib.typ": abk
+```
+
+**Schritt 2: Kompilieren**
+
+```bash
+# Repository klonen:
+git clone https://github.com/lultoni/easy-wi-hwr.git
+cd easy-wi-hwr
+
+# Template kompilieren (--root . ist nötig, damit Typst ../lib.typ auflösen kann):
+typst compile --root . template/main.typ
+
+# Live-Preview:
+typst watch --root . template/main.typ
+```
+
+**Vor dem Commit / Publish:** Imports wieder auf `@preview/` zurückschalten, damit Nutzer keine Fehler bekommen.
 
 ---
 

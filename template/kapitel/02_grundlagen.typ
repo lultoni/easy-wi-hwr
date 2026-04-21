@@ -1,5 +1,7 @@
 // kapitel/02_grundlagen.typ
-#import "@preview/easy-wi-hwr:0.1.1": abk
+#import "@preview/easy-wi-hwr:0.1.2": abk
+// Für lokale Entwicklung:
+// #import "../../lib.typ": abk
 
 = Theoretische Grundlagen
 
