@@ -81,24 +81,37 @@
 
 /// Source attribution for figures/tables (HWR requirement).
 ///
-/// Two equivalent syntaxes — positional (shorter) or keyword (explicit):
-///   caption: [Vergleich.    #quelle()]                          → "Quelle: Eigene Darstellung"
-///   caption: [Übersicht.    #quelle("Mustermann", 2024)]        → "Quelle: Mustermann (2024)"
-///   caption: [Daten.        #quelle("Mustermann", 2024, "S. 42")] → "Quelle: Mustermann (2024), S. 42"
-///   caption: [Gleich oben.  #quelle(author: "Mustermann", year: 2024, s: "S. 42")]
+/// Three syntaxes:
+///   caption: [Vergleich.  #quelle()]                              → "Quelle: Eigene Darstellung"
+///   caption: [Tabelle.    #quelle(<mustermann2024>)]              → "Quelle: Mustermann (2024)" (clickable!)
+///   caption: [Tabelle.    #quelle(<mustermann2024>, "S. 42")]     → "Quelle: Mustermann (2024), S. 42" (clickable!)
+///   caption: [Übersicht.  #quelle("Mustermann", 2024)]            → "Quelle: Mustermann (2024)" (plain text)
+///   caption: [Daten.      #quelle("Mustermann", 2024, "S. 42")]   → "Quelle: Mustermann (2024), S. 42"
+///   caption: [Gleich oben. #quelle(author: "Mustermann", year: 2024, s: "S. 42")]
 #let quelle(..args) = {
   let pos = args.pos()
   let named = args.named()
 
-  // Resolve author, year, s from either positional or keyword args.
-  // Positional order: quelle(author, year) or quelle(author, year, s)
-  let author = if pos.len() >= 1 { pos.at(0) } else { named.at("author", default: none) }
-  let year   = if pos.len() >= 2 { pos.at(1) } else { named.at("year",   default: none) }
-  let s      = if pos.len() >= 3 { pos.at(2) } else { named.at("s",      default: none) }
-
-  if author == none {
+  if pos.len() == 0 and named.len() == 0 {
+    // No args → "Quelle: Eigene Darstellung"
     context linguify("source-own")
+  } else if pos.len() >= 1 and type(pos.at(0)) == label {
+    // Label → clickable cite() link, optional page locator as 2nd positional arg or s:
+    let key = pos.at(0)
+    let s   = if pos.len() >= 2 { pos.at(1) } else { named.at("s", default: none) }
+    if s != none {
+      [Quelle: #cite(key, supplement: s)]
+    } else {
+      [Quelle: #cite(key)]
+    }
   } else {
+    // Plain author/year string (backward-compatible)
+    // Resolve from positional or keyword args.
+    // Positional order: quelle(author, year) or quelle(author, year, s)
+    let author = if pos.len() >= 1 { pos.at(0) } else { named.at("author", default: none) }
+    let year   = if pos.len() >= 2 { pos.at(1) } else { named.at("year",   default: none) }
+    let s      = if pos.len() >= 3 { pos.at(2) } else { named.at("s",      default: none) }
+
     assert(year != none,
       message: "quelle(): year is required when author is set. " +
                "Usage: quelle(\"Mustermann\", 2024) or quelle(author: \"Mustermann\", year: 2024)")

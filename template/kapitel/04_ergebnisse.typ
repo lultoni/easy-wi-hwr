@@ -20,7 +20,7 @@
     [Microsoft Dynamics], [12 Monate], [85.000 €],
     [Odoo], [6 Monate],  [30.000 €],
   ),
-  caption: [Vergleich ausgewählter ERP-Systeme. #quelle(author: "Mustermann", year: 2024)],
+  caption: [Vergleich ausgewählter ERP-Systeme. #quelle(<mustermann2024>)],
 )
 
 #lorem(60)

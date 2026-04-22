@@ -352,23 +352,32 @@ HWR requires a source attribution beneath every figure and table. The template p
 )
 // → "Source: Own illustration"
 
-// External source — short positional syntax:
+// External source — with clickable citation link (recommended):
+#figure(
+  image("images/chart.png"),
+  caption: [Market shares 2024. #quelle(<mustermann2024>)],
+)
+// → "Source: Mustermann (2024)" (clickable link to the bibliography)
+
+// With page reference (also clickable):
+#figure(
+  table(...),
+  caption: [Comparison. #quelle(<mueller2023>, "p. 42")],
+)
+// → "Source: Müller (2023), p. 42"
+
+// Without bib key — plain text (when source is not in the bibliography):
 #figure(
   image("images/chart.png"),
   caption: [Market shares 2024. #quelle("Mustermann", 2024)],
 )
-// → "Source: Mustermann (2024)"
-
-// With page reference:
-#figure(
-  table(...),
-  caption: [Comparison. #quelle("Müller", 2023, "p. 42")],
-)
-// → "Source: Müller (2023), p. 42"
+// → "Source: Mustermann (2024)" (plain text, no link)
 
 // Alternative keyword syntax (equivalent):
 // caption: [... #quelle(author: "Mustermann", year: 2024, s: "p. 15")]
 ```
+
+> **Tip:** Use `#quelle(<bib-key>)` whenever the source is in the bibliography — the attribution becomes a clickable link that jumps directly to the entry.
 
 > **Table footnotes (FMT-47):** HWR requires letters (a, b, c…) instead of numbers for footnotes *inside* tables. Typst supports this natively — use `#footnote(numbering: "a")` within table cells:
 > ```typst
@@ -542,7 +551,9 @@ These functions can be used in your chapter files:
 | `#gls("key")` | Glossary entry — expanded on first use, short form afterwards |
 | `#glspl("key")` | Glossary entry in plural form |
 | `#quelle()` | Source attribution "Own illustration" for figures/tables |
-| `#quelle(author: "Name", year: 2024)` | Source attribution with author and year |
+| `#quelle(<bib-key>)` | Source attribution with clickable citation link (recommended) |
+| `#quelle(<bib-key>, "p. 42")` | Same, with page reference |
+| `#quelle("Name", 2024)` | Source attribution as plain text (no bib link) |
 | `#blockquote[...]` | Indented, single-spaced block quote (HWR §3.4.2) |
 
 All functions are automatically available after the import in `main.typ`. In chapter files, you need to import the functions you use:
