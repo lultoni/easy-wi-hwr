@@ -5,10 +5,12 @@
 //   2. abk() Mode 2: inline long: → first use expands, short thereafter, appears in Abkürzungsverzeichnis
 //   3. abk() Mode 2: inline definition via old positional syntax (long: as named arg)
 //   4. quelle() bare → "Quelle: Eigene Darstellung"
-//   5. quelle("Author", 2024) → "Quelle: Author (2024)"
-//   6. quelle("Author", 2024, "S. 5") → "Quelle: Author (2024), S. 5"
-//   7. quelle(author: "Author", year: 2024, s: "S. 10") keyword syntax
-//   8. blockquote[] renders indented
+//   5. quelle(<key>) → "Quelle: Mustermann (2024)" (clickable cite link)
+//   6. quelle(<key>, "S. 42") → cite link with page supplement
+//   7. quelle("Author", 2024) → "Quelle: Author (2024)" (plain text, backward-compat)
+//   8. quelle("Author", 2024, "S. 5") → "Quelle: Author (2024), S. 5"
+//   9. quelle(author: "Author", year: 2024, s: "S. 10") keyword syntax
+//   10. blockquote[] renders indented
 
 #import "../lib.typ": hwr, abk, quelle, blockquote
 
@@ -55,16 +57,28 @@
         caption: [Platzhaltergrafik. #quelle()],
       )
 
-      Abbildung mit positionalem Autor/Jahr:
+      Abbildung mit Bib-Key (klickbarer Link):
       #figure(
         rect(width: 3cm, height: 1cm),
-        caption: [Datenübersicht. #quelle("Mustermann", 2024)],
+        caption: [Datenübersicht. #quelle(<mustermann2024>)],
+      )
+
+      Abbildung mit Bib-Key und Seitenangabe:
+      #figure(
+        rect(width: 3cm, height: 1cm),
+        caption: [Entwicklung. #quelle(<mueller2023>, "S. 42")],
+      )
+
+      Abbildung mit positionalem Autor/Jahr (Freitext):
+      #figure(
+        rect(width: 3cm, height: 1cm),
+        caption: [Vergleich. #quelle("Mustermann", 2024)],
       )
 
       Abbildung mit positionalem Autor/Jahr/Seite:
       #figure(
         rect(width: 3cm, height: 1cm),
-        caption: [Entwicklung. #quelle("Müller", 2023, "S. 42")],
+        caption: [Zeitreihe. #quelle("Müller", 2023, "S. 42")],
       )
 
       Abbildung mit Keyword-Syntax:

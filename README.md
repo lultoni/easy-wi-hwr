@@ -352,23 +352,32 @@ Die HWR verlangt unter jeder Abbildung und Tabelle eine Quellenangabe. Das Templ
 )
 // → "Quelle: Eigene Darstellung"
 
-// Fremde Quelle — kurze Schreibweise (positional):
+// Fremde Quelle — mit klickbarem Zitier-Link (empfohlen):
+#figure(
+  image("images/chart.png"),
+  caption: [Marktanteile 2024. #quelle(<mustermann2024>)],
+)
+// → "Quelle: Mustermann (2024)" (klickbarer Link ins Literaturverzeichnis)
+
+// Mit Seitenangabe (ebenfalls klickbar):
+#figure(
+  table(...),
+  caption: [Vergleich. #quelle(<mueller2023>, "S. 42")],
+)
+// → "Quelle: Müller (2023), S. 42"
+
+// Ohne Bib-Key — Freitext (wenn Quelle nicht im Literaturverzeichnis):
 #figure(
   image("images/chart.png"),
   caption: [Marktanteile 2024. #quelle("Mustermann", 2024)],
 )
-// → "Quelle: Mustermann (2024)"
-
-// Mit Seitenangabe:
-#figure(
-  table(...),
-  caption: [Vergleich. #quelle("Müller", 2023, "S. 42")],
-)
-// → "Quelle: Müller (2023), S. 42"
+// → "Quelle: Mustermann (2024)" (Klartext, kein Link)
 
 // Alternative Keyword-Schreibweise (gleichwertig):
 // caption: [... #quelle(author: "Mustermann", year: 2024, s: "S. 15")]
 ```
+
+> **Tipp:** Verwende `#quelle(<bib-key>)` wann immer die Quelle im Literaturverzeichnis steht — dann ist der Quellenhinweis klickbar und springt direkt zum Eintrag.
 
 > **Tabellen-Fußnoten (FMT-47):** HWR verlangt für Fußnoten *innerhalb* von Tabellen Buchstaben (a, b, c…) statt Zahlen. Typst unterstützt das nativ — verwende `#footnote(numbering: "a")` innerhalb der Tabellenzellen:
 > ```typst
@@ -543,7 +552,9 @@ Diese Funktionen kannst du in deinen Kapitel-Dateien verwenden:
 | `#gls("key")` | Glossareintrag — beim ersten Mal expandiert, danach nur kurz |
 | `#glspl("key")` | Glossareintrag in Pluralform |
 | `#quelle()` | Quellenangabe „Eigene Darstellung" für Abbildungen/Tabellen |
-| `#quelle(author: "Name", year: 2024)` | Quellenangabe mit Autor und Jahr |
+| `#quelle(<bib-key>)` | Quellenangabe mit klickbarem Zitier-Link (empfohlen) |
+| `#quelle(<bib-key>, "S. 42")` | Wie oben, mit Seitenangabe |
+| `#quelle("Name", 2024)` | Quellenangabe als Freitext (kein Bib-Link) |
 | `#blockquote[...]` | Eingerücktes, einzeiliges Blockzitat (HWR §3.4.2) |
 
 Alle Funktionen sind nach dem Import in `main.typ` automatisch verfügbar. In Kapitel-Dateien müssen die benötigten Funktionen importiert werden:
