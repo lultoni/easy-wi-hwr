@@ -313,6 +313,17 @@ abbreviations: (
 ),
 ```
 
+**Alternative: Direkt im Text definieren** — du kannst den `abbreviations:`-Block ganz weglassen und Abkürzungen beim ersten Vorkommen inline definieren:
+
+```typst
+Die #abk("KI", long: "Künstliche Intelligenz") ist wichtig.
+// → Erste Nutzung: "Künstliche Intelligenz (KI)"
+// → Weitere Nutzungen: #abk("KI") → "KI"
+// → Verzeichnis-Eintrag wird automatisch erstellt
+```
+
+Beide Wege sind kombinierbar.
+
 **Glossar** — für Fachbegriffe *ohne* eigene Abkürzung (z.B. „Stakeholder", „Scrum"):
 ```typst
 glossary: (
@@ -341,20 +352,28 @@ Die HWR verlangt unter jeder Abbildung und Tabelle eine Quellenangabe. Das Templ
 )
 // → "Quelle: Eigene Darstellung"
 
-// Fremde Quelle:
+// Fremde Quelle — kurze Schreibweise (positional):
 #figure(
   image("images/chart.png"),
-  caption: [Marktanteile 2024. #quelle(author: "Mustermann", year: 2024)],
+  caption: [Marktanteile 2024. #quelle("Mustermann", 2024)],
 )
 // → "Quelle: Mustermann (2024)"
 
 // Mit Seitenangabe:
 #figure(
   table(...),
-  caption: [Vergleich. #quelle(author: "Müller", year: 2023, s: "S. 42")],
+  caption: [Vergleich. #quelle("Müller", 2023, "S. 42")],
 )
 // → "Quelle: Müller (2023), S. 42"
+
+// Alternative Keyword-Schreibweise (gleichwertig):
+// caption: [... #quelle(author: "Mustermann", year: 2024, s: "S. 15")]
 ```
+
+> **Tabellen-Fußnoten (FMT-47):** HWR verlangt für Fußnoten *innerhalb* von Tabellen Buchstaben (a, b, c…) statt Zahlen. Typst unterstützt das nativ — verwende `#footnote(numbering: "a")` innerhalb der Tabellenzellen:
+> ```typst
+> table.cell[Wert#footnote(numbering: "a")[Erläuterung a]], ...
+> ```
 
 ---
 
