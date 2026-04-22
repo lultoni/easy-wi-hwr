@@ -361,7 +361,7 @@ Die HWR verlangt unter jeder Abbildung und Tabelle eine Quellenangabe. Das Templ
 
 // Mit Seitenangabe (ebenfalls klickbar):
 #figure(
-  table(...),
+  table(/* Tabelleninhalt */),
   caption: [Vergleich. #quelle(<mueller2023>, "S. 42")],
 )
 // → "Quelle: Müller (2023), S. 42"
