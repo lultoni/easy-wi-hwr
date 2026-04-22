@@ -42,8 +42,10 @@
   context {
     let used-nodes = query(<abk>)
     // Collect all defined abbreviations: from central dict (abbreviations param)
-    // merged with any inline-defined entries stored in _abk-dict state
-    let inline-dict = _abk-dict.get()
+    // merged with any inline-defined entries stored in _abk-dict state.
+    // Use final() to get the complete inline dict — abk() calls in the body come
+    // AFTER this index page, so get() would return an empty dict here.
+    let inline-dict = _abk-dict.final()
     let all-abbrs = abbreviations + inline-dict
 
     let used-keys = used-nodes.map(n => n.value)

@@ -81,14 +81,27 @@
 
 /// Source attribution for figures/tables (HWR requirement).
 ///
-/// Usage inside a figure caption:
-///   caption: [Vergleich der Systeme. #quelle()]              → "Quelle: Eigene Darstellung"
-///   caption: [Übersicht. #quelle("Mustermann", 2024)]        → "Quelle: Mustermann (2024)"
-///   caption: [Daten. #quelle("Mustermann", 2024, s: "S. 42")] → "Quelle: Mustermann (2024), S. 42"
-#let quelle(author: none, year: none, s: none) = {
+/// Two equivalent syntaxes — positional (shorter) or keyword (explicit):
+///   caption: [Vergleich.    #quelle()]                          → "Quelle: Eigene Darstellung"
+///   caption: [Übersicht.    #quelle("Mustermann", 2024)]        → "Quelle: Mustermann (2024)"
+///   caption: [Daten.        #quelle("Mustermann", 2024, "S. 42")] → "Quelle: Mustermann (2024), S. 42"
+///   caption: [Gleich oben.  #quelle(author: "Mustermann", year: 2024, s: "S. 42")]
+#let quelle(..args) = {
+  let pos = args.pos()
+  let named = args.named()
+
+  // Resolve author, year, s from either positional or keyword args.
+  // Positional order: quelle(author, year) or quelle(author, year, s)
+  let author = if pos.len() >= 1 { pos.at(0) } else { named.at("author", default: none) }
+  let year   = if pos.len() >= 2 { pos.at(1) } else { named.at("year",   default: none) }
+  let s      = if pos.len() >= 3 { pos.at(2) } else { named.at("s",      default: none) }
+
   if author == none {
     context linguify("source-own")
   } else {
+    assert(year != none,
+      message: "quelle(): year is required when author is set. " +
+               "Usage: quelle(\"Mustermann\", 2024) or quelle(author: \"Mustermann\", year: 2024)")
     let base = "Quelle: " + str(author) + " (" + str(year) + ")"
     if s != none { base + ", " + str(s) } else { base }
   }
@@ -509,4 +522,5 @@
 // ---------------------------------------------------------------------------
 // Users import these from lib.typ in their kapitel/ files:
 //   #import "@preview/easy-wi-hwr:0.1.2": abk, gls, glspl
+//   #import "@preview/easy-wi-hwr:0.1.2": quelle, blockquote
 

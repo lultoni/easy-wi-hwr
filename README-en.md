@@ -313,6 +313,17 @@ abbreviations: (
 ),
 ```
 
+**Alternative: Define inline in the text** — you can omit the `abbreviations:` block entirely and define abbreviations at first use:
+
+```typst
+The #abk("AI", long: "Artificial Intelligence") plays an important role.
+// → First use: "Artificial Intelligence (AI)"
+// → Further uses: #abk("AI") → "AI"
+// → List entry is created automatically
+```
+
+Both approaches can be combined.
+
 **Glossary** — for technical terms *without* their own abbreviation (e.g. "Stakeholder", "Scrum"):
 ```typst
 glossary: (
@@ -341,20 +352,28 @@ HWR requires a source attribution beneath every figure and table. The template p
 )
 // → "Source: Own illustration"
 
-// External source:
+// External source — short positional syntax:
 #figure(
   image("images/chart.png"),
-  caption: [Market shares 2024. #quelle(author: "Mustermann", year: 2024)],
+  caption: [Market shares 2024. #quelle("Mustermann", 2024)],
 )
 // → "Source: Mustermann (2024)"
 
 // With page reference:
 #figure(
   table(...),
-  caption: [Comparison. #quelle(author: "Müller", year: 2023, s: "p. 42")],
+  caption: [Comparison. #quelle("Müller", 2023, "p. 42")],
 )
 // → "Source: Müller (2023), p. 42"
+
+// Alternative keyword syntax (equivalent):
+// caption: [... #quelle(author: "Mustermann", year: 2024, s: "p. 15")]
 ```
+
+> **Table footnotes (FMT-47):** HWR requires letters (a, b, c…) instead of numbers for footnotes *inside* tables. Typst supports this natively — use `#footnote(numbering: "a")` within table cells:
+> ```typst
+> table.cell[Value#footnote(numbering: "a")[Note a]], ...
+> ```
 
 ---
 

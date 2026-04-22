@@ -1,7 +1,7 @@
 // kapitel/04_ergebnisse.typ
-#import "@preview/easy-wi-hwr:0.1.2": abk
+#import "@preview/easy-wi-hwr:0.1.2": abk, quelle
 // Für lokale Entwicklung:
-// #import "../../lib.typ": abk
+// #import "../../lib.typ": abk, quelle
 
 = Ergebnisse
 
@@ -20,7 +20,7 @@
     [Microsoft Dynamics], [12 Monate], [85.000 €],
     [Odoo], [6 Monate],  [30.000 €],
   ),
-  caption: [Vergleich ausgewählter ERP-Systeme],
+  caption: [Vergleich ausgewählter ERP-Systeme. #quelle(author: "Mustermann", year: 2024)],
 )
 
 #lorem(60)
