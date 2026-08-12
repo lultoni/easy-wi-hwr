@@ -1,5 +1,5 @@
 // kapitel/05_fazit.typ
-#import "@preview/easy-wi-hwr:0.1.2": abk
+#import "@preview/easy-wi-hwr:0.1.3": abk
 // Für lokale Entwicklung:
 // #import "../../lib.typ": abk
 

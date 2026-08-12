@@ -8,10 +8,10 @@
 // Schreibe keinen Text und kein zweites #show: davor — sonst wird
 // die Formatierung nicht korrekt angewendet.
 
-// Für Nutzer (nach typst init @preview/easy-wi-hwr:0.1.2):
-#import "@preview/easy-wi-hwr:0.1.2": hwr, abk, gls, glspl
+// Für Nutzer (nach typst init @preview/easy-wi-hwr:0.1.3):
+// #import "@preview/easy-wi-hwr:0.1.3": hwr, abk, gls, glspl
 // Für lokale Entwicklung:
-// #import "../lib.typ": hwr, abk, gls, glspl
+#import "../lib.typ": hwr, abk, gls, glspl
 
 #show: hwr.with(
   // === PFLICHTFELDER ===
@@ -156,15 +156,17 @@
   //   → read() wird hier in main.typ aufgelöst, daher Pfad relativ zu main.typ
 
   // Weitere Einstellungen:
-  heading-depth: 4,         // TOC-Tiefe: 1–4 (default: 4)
-  declaration-lang: auto,   // auto = folgt lang | "de" = immer Deutsch (rechtssicher)
-  city: "Berlin",           // Ort für Unterschriftsfeld (default: "Berlin")
-  show-appendix-toc: false, // true = optionales Anhangsverzeichnis vor Anhang-Einträgen einfügen
-                            // (HWR §3.10: "ist es möglich" — nicht Pflicht)
-  // warnings: true,        // false = gelbe Hinweisboxen im PDF unterdrücken
-                            // (z.B. Pretty-Mode-Hinweis, nach Absprache mit Prüfer)
-  // group-signature: auto, // auto/true = alle Autoren unterschreiben (default)
-                            // false = nur erster Autor unterschreibt (bei Gruppenarbeit)
+  heading-depth: 4,                   // TOC-Tiefe: 1–4 (default: 4)
+  declaration-lang: auto,             // auto = folgt lang | "de" = immer Deutsch (rechtssicher)
+  city: "Berlin",                     // Ort für Unterschriftsfeld (default: "Berlin")
+  show-appendix-toc: false,           // true = optionales Anhangsverzeichnis vor Anhang-Einträgen einfügen
+                                      // (HWR §3.10: "ist es möglich" — nicht Pflicht)
+  // include-appendix-in-lists: false, // false (default) = Abbildungen/Tabellen aus dem Anhang
+                                      // erscheinen NICHT im Abbildungs-/Tabellenverzeichnis
+                                      // true = Anhang-Einträge werden mit aufgeführt
+  // warnings: true,                  // false = gelbe Hinweisboxen im PDF unterdrücken
+  // group-signature: auto,           // auto/true = alle Autoren unterschreiben (default)
+                                      // false = nur erster Autor unterschreibt (bei Gruppenarbeit)
                             // HINWEIS bei false: Bitte mit dem Prüfer abklären, ob eine
                             // stellvertretende Unterschrift akzeptiert wird.
 )

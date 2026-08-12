@@ -8,7 +8,7 @@
 // All parameters: see requirements/api-design.md
 
 #import "@preview/linguify:0.5.0": linguify, linguify-raw, set-database, load-ftl-data
-#import "@preview/glossarium:0.5.10": make-glossary, register-glossary, print-glossary, gls, glspl
+#import "@preview/glossarium:0.5.10": make-glossary, register-glossary, gls, glspl
 
 #import "helper/date.typ": format-date
 #import "helper/abbreviations.typ": _abk-dict, setup-abbreviations, abk
@@ -186,6 +186,7 @@
   chapters: (),
   appendix: (),
   show-appendix-toc: false,
+  include-appendix-in-lists: false,
 
   bibliography: none,
   citation-style: "auto",
@@ -316,12 +317,11 @@
   // --- Global text & paragraph setup ---
   set text(font: "Times New Roman", size: 12pt, lang: lang)
 
-  // 1.5-line spacing (FMT-05):
-  // leading = space between baselines beyond font size.
-  // For 12pt at 1.5×: target baseline-to-baseline = 18pt.
-  // Typst leading is extra space; set to 0.65em ≈ 7.8pt → total ≈ 19.8pt (close to 18pt).
-  // block spacing = one full line between paragraphs (matches Word "1.5 line" paragraph spacing).
-  set par(justify: true, leading: 0.65em)
+  // 1.5-line spacing (FMT-05), matching Word behaviour:
+  // Word's "1.5 lines" = font-size × 1.2 (internal line height) × 1.5 = 12pt × 1.8 = 21.6pt baseline gap.
+  // Typst leading = baseline gap − font size = 21.6pt − 12pt = 9.6pt ≈ 0.8em.
+  // block spacing = one full line between paragraphs.
+  set par(justify: true, leading: 0.8em)
   set block(spacing: 1.5em)
 
   // FMT-06: Footnotes single-spaced (exception to 1.5× rule)
@@ -380,9 +380,21 @@
   // --- glossarium setup (must be before body) ---
   // glossarium 0.5.10 requires both make-glossary (show rule) and register-glossary (entries).
   // make-glossary sets up the tracking; register-glossary makes entries findable by gls()/glspl().
-  if glossary.len() > 0 {
+  // Strip `long` when long == short to avoid redundant "Stakeholder (Stakeholder)" on first use.
+  let glossary-normalized = glossary.map(e => {
+    let s = e.at("short", default: none)
+    let l = e.at("long",  default: none)
+    if s != none and l != none and str(s) == str(l) {
+      let cleaned = (:)
+      for (k, v) in e { if k != "long" { cleaned.insert(k, v) } }
+      cleaned
+    } else {
+      e
+    }
+  })
+  if glossary-normalized.len() > 0 {
     show: make-glossary
-    register-glossary(glossary)
+    register-glossary(glossary-normalized)
   }
 
   // --- abbreviations setup ---
@@ -444,8 +456,8 @@
     render-abstract(abstract, lang)
   }
 
-  // 3b. Verzeichnisse: TOC, Abkürzungen, Abb.-/Tab.-Verzeichnis (STR-03–STR-06)
-  render-indices(abbreviations, lang)
+  // 3b. Verzeichnisse: TOC, Abkürzungen, Glossar, Abb.-/Tab.-Verzeichnis (STR-03–STR-06, STR-11)
+  render-indices(abbreviations, glossary-normalized, lang, include-appendix-in-lists: include-appendix-in-lists)
 
   // 4. Haupttext: Arabische Seitennummerierung ab 1 (STR-07)
   counter(page).update(1)
@@ -495,13 +507,7 @@
 
   body
 
-  // 5. Glossar (nach Haupttext, vor Literaturverzeichnis — STR-11)
-  if glossary.len() > 0 {
-    pagebreak(weak: true)
-    heading(level: 1, numbering: none, outlined: true)[#linguify("glossary-title")]
-    print-glossary(glossary)
-    pagebreak()
-  }
+  // 5. Glossar → jetzt im Vorspann (render-indices), nicht mehr hier
 
   // 6. Literaturverzeichnis (STR-08)
   // Title is forced via l10n (DE: "Literaturverzeichnis", EN: "References") — Bug 8
@@ -535,6 +541,8 @@
   // 7. Anhang: user-Einträge + KI-Verzeichnis automatisch als letztes Item (STR-09, STR-12)
   if appendix.len() > 0 or ai-tools.len() > 0 {
     pagebreak(weak: true)
+    // Anchor so indices.typ can filter out figures that appear in the appendix
+    [#metadata("appendix-start") #label("appendix-start")]
     render-appendix(appendix, ai-tools, lang, show-toc: show-appendix-toc)
   }
 
@@ -546,6 +554,6 @@
 // Re-exports for use in chapter files
 // ---------------------------------------------------------------------------
 // Users import these from lib.typ in their kapitel/ files:
-//   #import "@preview/easy-wi-hwr:0.1.2": abk, gls, glspl
-//   #import "@preview/easy-wi-hwr:0.1.2": quelle, blockquote
+//   #import "@preview/easy-wi-hwr:0.1.3": abk, gls, glspl
+//   #import "@preview/easy-wi-hwr:0.1.3": quelle, blockquote
 

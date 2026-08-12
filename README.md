@@ -11,7 +11,7 @@ Du konzentrierst dich auf den Inhalt. Das Template erledigt den Rest:
 - Ehrenwörtliche Erklärung mit 2025 KI-Klausel
 - KI-Verzeichnis (wenn KI-Tools genutzt wurden)
 
-> **Schnellstart:** `brew install typst && typst init @preview/easy-wi-hwr:0.1.2 meine-arbeit && cd meine-arbeit && typst watch main.typ`
+> **Schnellstart:** `brew install typst && typst init @preview/easy-wi-hwr:0.1.3 meine-arbeit && cd meine-arbeit && typst watch main.typ`
 
 > **Während des Schreibens:** [Hilfsfunktionen](#hilfsfunktionen-im-text-verwendbar)
 
@@ -131,7 +131,7 @@ Das Template verwendet **Times New Roman** (HWR-Vorschrift).
 
 Führe folgenden Befehl im Terminal aus (in dem Verzeichnis, wo du deinen Projektordner willst):
 ```bash
-typst init @preview/easy-wi-hwr:0.1.2 meine-arbeit
+typst init @preview/easy-wi-hwr:0.1.3 meine-arbeit
 ```
 → `meine-arbeit` ist der Titel des Ordners und kann angepasst werden
 
@@ -559,7 +559,7 @@ Diese Funktionen kannst du in deinen Kapitel-Dateien verwenden:
 
 Alle Funktionen sind nach dem Import in `main.typ` automatisch verfügbar. In Kapitel-Dateien müssen die benötigten Funktionen importiert werden:
 ```typst
-#import "@preview/easy-wi-hwr:0.1.2": abk, gls, glspl, quelle, blockquote
+#import "@preview/easy-wi-hwr:0.1.3": abk, gls, glspl, quelle, blockquote
 ```
 
 ---
@@ -671,7 +671,7 @@ Die Word-Version dient erfahrungsgemäß vor allem der Archivierung — die Form
 | Import-Fehler bei `include()` | Pfade in `chapters:` sind relativ zu `main.typ` — `include("kapitel/01_einleitung.typ")` |
 | `signature muss image-Content sein` | Verwende `signature: image("images/sig.png")` statt `signature: "images/sig.png"` |
 | Alle Seiten doppelt / seltsame Formatierung | Nur ein `#show: hwr.with(...)` Block pro Datei — kein zweites `#show:` und kein Text davor |
-| `#abk()` / `#gls()` in Kapitel-Datei funktioniert nicht | In jeder Kapitel-Datei muss `#import "@preview/easy-wi-hwr:0.1.2": abk` stehen (oder welche Funktionen du nutzt) |
+| `#abk()` / `#gls()` in Kapitel-Datei funktioniert nicht | In jeder Kapitel-Datei muss `#import "@preview/easy-wi-hwr:0.1.3": abk` stehen (oder welche Funktionen du nutzt) |
 | Zitierstil-Datei wird nicht gefunden | `citation-style: read("mein-stil.csl")` — Pfad ist relativ zu `main.typ`. Datei muss im selben Ordner liegen |
 | Anhang-Nummerierung zeigt A, B, C statt 1, 2, 3 | Nutze die eingebaute Anhang-Funktion via `appendix:` Parameter — nicht manuell nummerieren |
 | PDF zeigt keine Seitennummern | Prüfe ob nur ein `#show: hwr.with(...)` vorhanden ist und kein `set page(numbering: none)` im Text steht |
@@ -687,14 +687,14 @@ Wenn du am Template selbst arbeitest (nicht als Nutzer), musst du die Imports um
 In `template/main.typ`:
 ```typst
 // Diese Zeile auskommentieren:
-// #import "@preview/easy-wi-hwr:0.1.2": hwr, abk, gls, glspl, quelle, blockquote
+// #import "@preview/easy-wi-hwr:0.1.3": hwr, abk, gls, glspl, quelle, blockquote
 // Diese Zeile aktivieren:
 #import "../lib.typ": hwr, abk, gls, glspl, quelle, blockquote
 ```
 
 In `template/kapitel/01_einleitung.typ` (und allen anderen Kapitel-Dateien die `abk` nutzen):
 ```typst
-// #import "@preview/easy-wi-hwr:0.1.2": abk
+// #import "@preview/easy-wi-hwr:0.1.3": abk
 #import "../../lib.typ": abk
 ```
 

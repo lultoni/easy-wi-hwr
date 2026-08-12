@@ -1,6 +1,6 @@
 // kapitel/01_einleitung.typ
 // Ersetze diesen Inhalt durch deine eigene Einleitung.
-#import "@preview/easy-wi-hwr:0.1.2": abk
+#import "@preview/easy-wi-hwr:0.1.3": abk
 // Für lokale Entwicklung:
 // #import "../../lib.typ": abk
 

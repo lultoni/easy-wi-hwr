@@ -1,20 +1,39 @@
 // pages/indices.typ
-// Verzeichnisse: TOC, Abkürzungsverzeichnis, Abbildungsverzeichnis, Tabellenverzeichnis
+// Verzeichnisse: TOC, Abkürzungsverzeichnis, Glossar, Abbildungsverzeichnis, Tabellenverzeichnis
 // STR-03: Inhaltsverzeichnis (Pflicht)
 // STR-04: Abkürzungsverzeichnis (nur wenn Abkürzungen verwendet)
+// STR-11: Glossar (optional, direkt nach Abkürzungsverzeichnis — kein expliziter §, DECIDED)
 // STR-05: Abbildungsverzeichnis (nur ab 5 Abbildungen)
 // STR-06: Tabellenverzeichnis (nur ab 5 Tabellen)
 // STR-41: Abkürzungen alphabetisch, keine Seitenangaben
 // Alle Heading-Titel aus l10n
 
 #import "@preview/linguify:0.5.0": linguify
+#import "@preview/glossarium:0.5.10": print-glossary
 #import "../helper/abbreviations.typ": _abk-dict
 
 /// Render all front-matter indices.
 ///
 /// - abbreviations: dict ("KI": "Künstliche Intelligenz", ...) from hwr() param
+/// - glossary: array of glossary entries (from hwr() param)
 /// - lang: "de" | "en"
-#let render-indices(abbreviations, lang) = {
+/// - include-appendix-in-lists: bool — if false (default), figures/tables inside
+///   the appendix are excluded from the Abbildungs-/Tabellenverzeichnis
+#let render-indices(abbreviations, glossary, lang, include-appendix-in-lists: false) = {
+
+  // Helper: returns the page number of the appendix start anchor, or none if no appendix.
+  let appendix-start-page() = {
+    let anchors = query(<appendix-start>)
+    if anchors.len() > 0 { anchors.first().location().page() } else { none }
+  }
+
+  // Helper: filter figures/tables to exclude those in the appendix (when requested).
+  let filter-figures(figs) = {
+    if include-appendix-in-lists { return figs }
+    let app-page = appendix-start-page()
+    if app-page == none { return figs }
+    figs.filter(f => f.location().page() < app-page)
+  }
 
   // ── 1. Inhaltsverzeichnis ────────────────────────────────────────────────
   // set outline() depth and indent already configured globally in lib.typ
@@ -76,17 +95,26 @@
     }
   }
 
-  // ── 3. Abbildungsverzeichnis (nur ab 5 Abbildungen) ─────────────────────
+  // ── 3. Glossar (nur wenn Einträge vorhanden — STR-11/DECIDED) ───────────
+  if glossary.len() > 0 {
+    heading(level: 1, numbering: none, outlined: true)[#linguify("glossary-title")]
+    // Reduce block spacing to avoid 1.5em gaps between entries (which come from
+    // the global block(spacing: 1.5em) set for body text).
+    set block(spacing: 0.65em)
+    print-glossary(glossary, disable-back-references: true)
+    pagebreak()
+  }
+
+  // ── 4. Abbildungsverzeichnis (nur ab 5 Abbildungen) ─────────────────────
   // STR-05, FMT requirement: show only if ≥5 figures
   context {
-    let figs = query(figure.where(kind: image))
+    let figs = filter-figures(query(figure.where(kind: image)))
     if figs.len() >= 5 {
       heading(level: 1, numbering: none, outlined: true)[#linguify("figures-title")]
       v(1em)
 
       let fig-prefix = linguify("figure-prefix")
 
-      // Header row
       grid(
         columns: (60pt, 1fr, auto),
         align: left,
@@ -94,10 +122,10 @@
       )
       v(0.5em)
 
-      show outline.entry.where(level: 1): it => {
-        let num = it.element.counter.at(it.element.location()).first()
-        let pg  = it.element.location().page()
-        let ttl = it.element.caption.body
+      for fig in figs {
+        let num = fig.counter.at(fig.location()).first()
+        let pg  = fig.location().page()
+        let ttl = fig.caption.body
         grid(
           columns: (60pt, 1fr, auto),
           [#fig-prefix #num],
@@ -105,15 +133,14 @@
           [#pg],
         )
       }
-      outline(title: none, target: figure.where(kind: image))
 
       pagebreak()
     }
   }
 
-  // ── 4. Tabellenverzeichnis (nur ab 5 Tabellen) ──────────────────────────
+  // ── 5. Tabellenverzeichnis (nur ab 5 Tabellen) ──────────────────────────
   context {
-    let tabs = query(figure.where(kind: table))
+    let tabs = filter-figures(query(figure.where(kind: table)))
     if tabs.len() >= 5 {
       heading(level: 1, numbering: none, outlined: true)[#linguify("tables-title")]
       v(1em)
@@ -127,10 +154,10 @@
       )
       v(0.5em)
 
-      show outline.entry.where(level: 1): it => {
-        let num = it.element.counter.at(it.element.location()).first()
-        let pg  = it.element.location().page()
-        let ttl = it.element.caption.body
+      for tab in tabs {
+        let num = tab.counter.at(tab.location()).first()
+        let pg  = tab.location().page()
+        let ttl = tab.caption.body
         grid(
           columns: (60pt, 1fr, auto),
           [#tab-prefix #num],
@@ -138,7 +165,6 @@
           [#pg],
         )
       }
-      outline(title: none, target: figure.where(kind: table))
 
       pagebreak()
     }

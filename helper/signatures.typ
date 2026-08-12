@@ -30,28 +30,30 @@
 
   for a in sig-authors {
     let sig = a.at("signature", default: none)
+    v(2em)
     block(breakable: false)[
       #grid(
         columns: (1fr, 1fr),
         column-gutter: 2em,
+        rows: (2.5cm, auto),
+        align: (bottom, bottom),
+        // row 0: space / signature image
+        [],
+        if sig != none {
+          align(bottom)[
+            #set image(height: 2.5cm, fit: "contain")
+            #sig
+          ]
+        } else { [] },
+        // row 1: lines + labels
         [
-          #v(1.5cm)
           #line(length: 100%)
           #city, #linguify("declaration-place-date")
         ],
-        if sig != none {
-          [
-            #block(height: 1.5cm)[#set image(height: 100%); #sig]
-            #line(length: 100%)
-            #linguify("declaration-signature") — #a.name
-          ]
-        } else {
-          [
-            #v(1.5cm)
-            #line(length: 100%)
-            #linguify("declaration-signature") — #a.name
-          ]
-        },
+        [
+          #line(length: 100%)
+          #linguify("declaration-signature") — #a.name
+        ],
       )
     ]
     v(1em)

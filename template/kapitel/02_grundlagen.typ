@@ -1,5 +1,5 @@
 // kapitel/02_grundlagen.typ
-#import "@preview/easy-wi-hwr:0.1.2": abk, gls
+#import "@preview/easy-wi-hwr:0.1.3": abk, gls
 // Für lokale Entwicklung:
 // #import "../../lib.typ": abk, gls
 

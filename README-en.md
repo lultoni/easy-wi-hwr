@@ -11,7 +11,7 @@ You focus on the content. The template handles the rest:
 - Statutory declaration with 2025 AI clause
 - AI tools register (when AI tools were used)
 
-> **Quickstart:** `brew install typst && typst init @preview/easy-wi-hwr:0.1.2 my-paper && cd my-paper && typst watch main.typ`
+> **Quickstart:** `brew install typst && typst init @preview/easy-wi-hwr:0.1.3 my-paper && cd my-paper && typst watch main.typ`
 
 > **While writing:** [Helper Functions](#helper-functions-usable-in-text)
 
@@ -131,7 +131,7 @@ The template uses **Times New Roman** (required by HWR).
 
 Run the following command in the terminal (in the directory where you want your project folder):
 ```bash
-typst init @preview/easy-wi-hwr:0.1.2 my-paper
+typst init @preview/easy-wi-hwr:0.1.3 my-paper
 ```
 → `my-paper` is the folder name and can be changed.
 
@@ -558,7 +558,7 @@ These functions can be used in your chapter files:
 
 All functions are automatically available after the import in `main.typ`. In chapter files, you need to import the functions you use:
 ```typst
-#import "@preview/easy-wi-hwr:0.1.2": abk, gls, glspl, quelle, blockquote
+#import "@preview/easy-wi-hwr:0.1.3": abk, gls, glspl, quelle, blockquote
 ```
 
 ---
@@ -670,7 +670,7 @@ The Word version typically serves archival purposes only — in practice, perfec
 | Import error with `include()` | Paths in `chapters:` are relative to `main.typ` — `include("kapitel/01_einleitung.typ")` |
 | `signature muss image-Content sein` | Use `signature: image("images/sig.png")` instead of `signature: "images/sig.png"` |
 | All pages doubled / strange formatting | Only one `#show: hwr.with(...)` block per file — no second `#show:` and no text before it |
-| `#abk()` / `#gls()` not working in chapter file | Each chapter file needs `#import "@preview/easy-wi-hwr:0.1.2": abk` (or whichever functions you use) |
+| `#abk()` / `#gls()` not working in chapter file | Each chapter file needs `#import "@preview/easy-wi-hwr:0.1.3": abk` (or whichever functions you use) |
 | Citation style file not found | `citation-style: read("my-style.csl")` — path is relative to `main.typ`. File must be in the same folder |
 | Appendix numbering shows A, B, C instead of 1, 2, 3 | Use the built-in appendix function via the `appendix:` parameter — do not number manually |
 | PDF shows no page numbers | Check that there is only one `#show: hwr.with(...)` and no `set page(numbering: none)` in your text |
@@ -686,14 +686,14 @@ If you're working on the template itself (not as a user), you need to switch the
 In `template/main.typ`:
 ```typst
 // Comment out this line:
-// #import "@preview/easy-wi-hwr:0.1.2": hwr, abk, gls, glspl, quelle, blockquote
+// #import "@preview/easy-wi-hwr:0.1.3": hwr, abk, gls, glspl, quelle, blockquote
 // Activate this line:
 #import "../lib.typ": hwr, abk, gls, glspl, quelle, blockquote
 ```
 
 In `template/kapitel/01_einleitung.typ` (and all other chapter files that use `abk`):
 ```typst
-// #import "@preview/easy-wi-hwr:0.1.2": abk
+// #import "@preview/easy-wi-hwr:0.1.3": abk
 #import "../../lib.typ": abk
 ```
 
